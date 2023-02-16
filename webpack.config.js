@@ -9,7 +9,7 @@ const config = {
         },
     },
     resolve: {
-        extensions: ['.ts', '.tsx'],
+        extensions: ['.js', '.ts', '.tsx'],
     },
     module: {
         rules: [

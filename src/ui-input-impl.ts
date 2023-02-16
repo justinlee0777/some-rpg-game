@@ -1,7 +1,5 @@
 import { Action, Attack, Character, Command, ListenForUserInput } from 'rpg-game-engine';
-import { FasterAttack } from 'packages/engine/commands/skills/implementations/faster-attack';
-import { FastestAttack } from 'packages/engine/commands/skills/implementations/fastest-attack';
-import { Hide } from 'packages/engine/commands/skills/implementations/hide';
+import { FasterAttack, FastestAttack, Hide } from 'rpg-game-engine/skills';
 
 import { environment } from '../environment';
 

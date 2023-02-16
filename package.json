@@ -12,7 +12,7 @@
     "dependencies": {
         "react": "^18.0.0",
         "react-dom": "^18.0.0",
-        "rpg-game-engine": "^1.0.1"
+        "rpg-game-engine": "^1.0.2"
     },
     "devDependencies": {
         "@types/react": "^17.0.43",

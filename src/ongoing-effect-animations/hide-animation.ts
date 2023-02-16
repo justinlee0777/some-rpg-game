@@ -1,5 +1,4 @@
-import { CharacterType } from 'rpg-game-engine';
-import { OngoingEffectAnimation } from 'packages/engine/ui/animations/ongoing-effect-animation.interface';
+import { CharacterType, OngoingEffectAnimation } from 'rpg-game-engine';
 
 import { CharacterSpriteMapInstance } from '../character-sprite-map-impl';
 
