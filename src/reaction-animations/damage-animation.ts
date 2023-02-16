@@ -1,7 +1,8 @@
-import { Character, CharacterType } from 'rpg-game-engine';
+import { Character } from 'rpg-game-engine';
 import { ReactionAnimation } from 'rpg-game-engine/ui';
 
 import { CharacterSpriteMapInstance } from '../character-sprite-map-impl';
+import { CharacterType } from '../characters';
 
 export function damageAnimation(target: Character): ReactionAnimation {
     return () => {

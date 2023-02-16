@@ -1,6 +1,6 @@
-import { CharacterType } from 'rpg-game-engine';
 import { OngoingEffectAnimation } from 'rpg-game-engine/ui';
 
+import { CharacterType } from '../characters';
 import { CharacterSpriteMapInstance } from '../character-sprite-map-impl';
 
 export const hideAnimation: OngoingEffectAnimation = {

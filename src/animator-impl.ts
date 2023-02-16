@@ -1,6 +1,5 @@
 import {
     Character,
-    CharacterType,
     Effect,
     EffectReaction,
     isHiding,
@@ -15,6 +14,7 @@ import { CharacterSpriteMapInstance } from './character-sprite-map-impl';
 import { damageAnimation } from './reaction-animations/damage-animation';
 import { attackAnimation } from './skill-animations/attack-animation';
 import { hideAnimation } from './ongoing-effect-animations/hide-animation';
+import { CharacterType } from './characters';
 
 export class AnimatorImpl implements Animator {
     private readonly defaultAnimation: SkillAnimation = {

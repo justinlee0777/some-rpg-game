@@ -1,13 +1,8 @@
-import {
-    ActionCoordinator,
-    Character,
-    CharacterType,
-    Hider,
-    HiderAI,
-    Puzzle,
-} from 'rpg-game-engine';
+import { ActionCoordinator, Character, Puzzle } from 'rpg-game-engine';
 
 import { UIImpl } from './src';
+import { HiderAI } from './src/ai';
+import { CharacterType, Hider } from './src/characters';
 import { Sprite } from './src/sprites/sprite';
 
 document.addEventListener(

@@ -1,5 +1,6 @@
-import { Character, CharacterType, SkillAnimation } from 'rpg-game-engine';
+import { Character, SkillAnimation } from 'rpg-game-engine';
 
+import { CharacterType } from '../characters';
 import { CharacterSpriteMapInstance } from '../character-sprite-map-impl';
 
 export function attackAnimation(source: Character): SkillAnimation {
