@@ -1,6 +1,4 @@
 import {
-    Animation,
-    Animator,
     Character,
     CharacterType,
     Effect,
@@ -8,9 +6,10 @@ import {
     isHiding,
     OngoingEffect,
     OngoingEffectType,
-    SkillAnimation,
     SkillType,
 } from 'rpg-game-engine';
+import { Animation, Animator, SkillAnimation } from 'rpg-game-engine/ui';
+
 import { CharacterSpriteMapInstance } from './character-sprite-map-impl';
 
 import { damageAnimation } from './reaction-animations/damage-animation';

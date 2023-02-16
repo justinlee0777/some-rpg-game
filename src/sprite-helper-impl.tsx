@@ -1,8 +1,9 @@
-import { Character, Hider, SpriteHelper, Test } from 'rpg-game-engine';
+import { Character, Hider, Test } from 'rpg-game-engine';
 import * as React from 'react';
 
 import { HiderSprite } from './sprites/implementations';
 import { Sprite, SpriteElement } from './sprites/sprite';
+import { SpriteHelper } from './sprites/sprite-helper.interface';
 
 export class SpriteHelperImpl implements SpriteHelper<SpriteElement> {
     get(character: Character): SpriteElement {

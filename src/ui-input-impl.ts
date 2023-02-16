@@ -1,7 +1,9 @@
-import { Action, Attack, Character, Command, ListenForUserInput } from 'rpg-game-engine';
+import { Action, Attack, Character, Command } from 'rpg-game-engine';
 import { FasterAttack, FastestAttack, Hide } from 'rpg-game-engine/skills';
 
 import { environment } from '../environment';
+
+import { ListenForUserInput } from './ui-input/ui-input.interface';
 
 export function listenForUserInputFactory(): ListenForUserInput {
     const userInput: HTMLElement = document.getElementById('attacks');

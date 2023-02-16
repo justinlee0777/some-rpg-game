@@ -1,4 +1,5 @@
-import { CharacterType, OngoingEffectAnimation } from 'rpg-game-engine';
+import { CharacterType } from 'rpg-game-engine';
+import { OngoingEffectAnimation } from 'rpg-game-engine/ui';
 
 import { CharacterSpriteMapInstance } from '../character-sprite-map-impl';
 
@@ -13,9 +14,13 @@ export const hideAnimation: OngoingEffectAnimation = {
             element.classList.add('hidden');
 
             return new Promise((resolve) => {
-                element.addEventListener('transitionend', () => resolve(), {
-                    once: true,
-                });
+                element.addEventListener(
+                    'transitionend',
+                    () => resolve(undefined),
+                    {
+                        once: true,
+                    }
+                );
             });
         };
     },
@@ -29,9 +34,13 @@ export const hideAnimation: OngoingEffectAnimation = {
             element.classList.remove('hidden');
 
             return new Promise((resolve) => {
-                element.addEventListener('transitionend', () => resolve(), {
-                    once: true,
-                });
+                element.addEventListener(
+                    'transitionend',
+                    () => resolve(undefined),
+                    {
+                        once: true,
+                    }
+                );
             });
         };
     },

@@ -1,6 +1,9 @@
-import { CharacterConfig, SpriteDrawer } from 'rpg-game-engine';
 import { Root, createRoot } from 'react-dom/client';
 
+import {
+    CharacterConfig,
+    SpriteDrawer,
+} from './sprites/sprite-drawer.interface';
 import { SpriteElement } from './sprites/sprite';
 
 export class SpriteDrawerImpl implements SpriteDrawer<SpriteElement> {

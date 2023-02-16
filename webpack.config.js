@@ -28,10 +28,7 @@ const config = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: path.resolve(
-                __dirname,
-                './index.html'
-            ),
+            template: path.resolve(__dirname, './index.html'),
             title: 'Game',
         }),
         new CopyWebpackPlugin({

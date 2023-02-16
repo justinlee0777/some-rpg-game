@@ -1,4 +1,5 @@
-import { Character, CharacterType, ReactionAnimation } from 'rpg-game-engine';
+import { Character, CharacterType } from 'rpg-game-engine';
+import { ReactionAnimation } from 'rpg-game-engine/ui';
 
 import { CharacterSpriteMapInstance } from '../character-sprite-map-impl';
 
