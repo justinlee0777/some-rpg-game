@@ -1,25 +1,23 @@
-import { Root, createRoot } from 'react-dom/client';
-
 import {
     CharacterConfig,
     SpriteDrawer,
 } from './sprites/sprite-drawer.interface';
-import { SpriteElement } from './sprites/sprite';
+import { Sprite } from './sprites/sprite';
 
-export class SpriteDrawerImpl implements SpriteDrawer<SpriteElement> {
-    private playerContainer: Root;
-    private enemyContainer: Root;
+export class SpriteDrawerImpl implements SpriteDrawer<Sprite> {
+    private playerContainer: HTMLElement;
+    private enemyContainer: HTMLElement;
 
     constructor() {
-        this.playerContainer = createRoot(document.getElementById('players'));
-        this.enemyContainer = createRoot(document.getElementById('enemies'));
+        this.playerContainer = document.getElementById('players');
+        this.enemyContainer = document.getElementById('enemies');
     }
 
-    draw(element: SpriteElement, config: CharacterConfig): void {
+    draw(element: Sprite, config: CharacterConfig): void {
         if (config.player) {
-            this.playerContainer.render(element.reactElement);
+            this.playerContainer.appendChild(element.htmlElement);
         } else {
-            this.enemyContainer.render(element.reactElement);
+            this.enemyContainer.appendChild(element.htmlElement);
         }
     }
 }

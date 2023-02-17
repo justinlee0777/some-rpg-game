@@ -12,13 +12,9 @@
         "format": "prettier --write ."
     },
     "dependencies": {
-        "react": "^18.0.0",
-        "react-dom": "^18.0.0",
         "rpg-game-engine": "file:../rpg-game-engine/dist"
     },
     "devDependencies": {
-        "@types/react": "^17.0.43",
-        "@types/react-dom": "^17.0.14",
         "copy-webpack-plugin": "^11.0.0",
         "html-webpack-plugin": "^5.5.0",
         "http-server": "^14.1.1",

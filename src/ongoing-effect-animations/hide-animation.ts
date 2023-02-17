@@ -10,7 +10,7 @@ export const hideAnimation: OngoingEffectAnimation = {
                 source.constructor as CharacterType
             );
 
-            const element = sprite.avatar.current;
+            const element = sprite.avatar;
             element.classList.add('hidden');
 
             return new Promise((resolve) => {
@@ -30,7 +30,7 @@ export const hideAnimation: OngoingEffectAnimation = {
                 source.constructor as CharacterType
             );
 
-            const element = sprite.avatar.current;
+            const element = sprite.avatar;
             element.classList.remove('hidden');
 
             return new Promise((resolve) => {

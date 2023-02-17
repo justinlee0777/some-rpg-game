@@ -68,7 +68,7 @@ export class AnimatorImpl implements Animator {
             character.constructor as CharacterType
         );
         return () => {
-            sprite.stamina.current.textContent = newStamina.toString();
+            sprite.setStamina(newStamina.toString());
             return Promise.resolve();
         };
     }

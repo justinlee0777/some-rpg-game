@@ -9,15 +9,15 @@ export function attackAnimation(source: Character): SkillAnimation {
             const sprite = CharacterSpriteMapInstance.get(
                 source.constructor as CharacterType
             );
-            sprite.stamina.current.textContent =
-                source.current.stamina.toString();
+
+            sprite.setStamina(source.current.stamina.toString());
             return Promise.resolve();
         },
         runEffect: () => {
             const sprite = CharacterSpriteMapInstance.get(
                 source.constructor as CharacterType
             );
-            const animation = sprite.avatar.current.animate(
+            const animation = sprite.animateAvatar(
                 [{ transform: 'rotate(360deg)' }],
                 {
                     duration: 600,

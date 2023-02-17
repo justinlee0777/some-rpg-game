@@ -3,7 +3,6 @@ import { ActionCoordinator, Character, Puzzle } from 'rpg-game-engine';
 import { UIImpl } from './src';
 import { HiderAI } from './src/ai';
 import { CharacterType, Hider } from './src/characters';
-import { Sprite } from './src/sprites/sprite';
 
 document.addEventListener(
     'DOMContentLoaded',
@@ -12,15 +11,11 @@ document.addEventListener(
         const players = [new Hider()];
         const enemies = new HiderAI();
 
-        const allSprites: Array<Sprite> = [];
-
         const setMap = (character: Character) => {
             const constructorFn = character.constructor as CharacterType;
 
             const element = UIImpl.SpriteHelper.get(character);
-            UIImpl.CharacterSpriteMap.set(constructorFn, element.sprite);
-
-            allSprites.push(element.sprite);
+            UIImpl.CharacterSpriteMap.set(constructorFn, element);
 
             return element;
         };

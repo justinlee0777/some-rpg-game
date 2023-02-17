@@ -10,12 +10,11 @@ export function damageAnimation(target: Character): ReactionAnimation {
             target.constructor as CharacterType
         );
 
-        const animation = element.avatar.current.animate(
+        const animation = element.animateAvatar(
             [{ filter: 'saturate(3)' }, { filter: 'none' }],
             333
         );
-        element.hitpoints.current.textContent =
-            target.current.health.toString();
+        element.setHitpoints(target.current.health.toString());
 
         return animation.finished.then();
     };
