@@ -11,12 +11,7 @@ export class SpriteHelperImpl implements SpriteHelper<SpriteElement> {
         switch (character.constructor) {
             case Hider:
             case Test:
-                let resolve;
-                const doneDrawing = new Promise<void>((r) => (resolve = r));
-
                 const sprite: Sprite = {
-                    doneDrawing,
-                    resolve,
                     character,
                     avatar: React.createRef(),
                     hitpoints: React.createRef(),

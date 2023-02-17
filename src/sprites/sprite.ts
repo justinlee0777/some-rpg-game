@@ -8,18 +8,12 @@ export interface Sprite {
     /** Character metadata. */
     character: Character;
 
-    /** Resolves when the sprite is done drawing. */
-    doneDrawing: Promise<void>;
-
     /** Graphical representation of character. */
-    avatar: RefObject<HTMLElement>;
+    avatar: RefObject<HTMLImageElement>;
     /** Graphical representation of hitpoints. */
     hitpoints: RefObject<HTMLElement>;
     /** Graphical representation of stamina. */
     stamina: RefObject<HTMLElement>;
-
-    /** Resolve function for the 'doneDrawing' promise. */
-    resolve(): void;
 }
 
 /**

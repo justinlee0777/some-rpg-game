@@ -6,38 +6,27 @@ import { Sprite } from './sprite';
 export class HiderSprite extends React.Component<Sprite> implements Sprite {
     character: Character;
 
-    doneDrawing: Promise<void>;
-
-    avatar: React.RefObject<HTMLElement>;
+    avatar: React.RefObject<HTMLImageElement>;
 
     hitpoints: React.RefObject<HTMLElement>;
 
     stamina: React.RefObject<HTMLElement>;
 
-    resolve: () => void;
-
     constructor(props: Sprite) {
         super(props);
 
         this.character = props.character;
-        this.doneDrawing = props.doneDrawing;
         this.avatar = props.avatar;
         this.hitpoints = props.hitpoints;
         this.stamina = props.stamina;
-        this.resolve = props.resolve;
-    }
-
-    componentDidMount() {
-        this.resolve();
     }
 
     render() {
-        const src =
-            'https://th.bing.com/th/id/OIP.Tg20QY9WPX17amOdL1LMnAHaHa?pid=ImgDet&rs=1';
+        const src = './assets/garbage-can.png';
 
         return (
             <div className="character">
-                <img className="avatar" ref={this.avatar as any} src={src} />
+                <img className="avatar" ref={this.avatar} src={src} />
                 <span className="health" ref={this.hitpoints}>
                     {this.character.current.health}
                 </span>

@@ -32,7 +32,10 @@ const config = {
             title: 'Game',
         }),
         new CopyWebpackPlugin({
-            patterns: [{ from: './index.css' }],
+            patterns: [
+                { from: './index.css' },
+                { from: './assets', to: 'assets' },
+            ],
         }),
     ],
 };

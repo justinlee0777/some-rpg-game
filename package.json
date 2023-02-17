@@ -6,6 +6,7 @@
     "author": "",
     "license": "ISC",
     "scripts": {
+        "start": "npm run build:dev && http-server -c-1 ./dist",
         "build": "tsc && webpack --mode=production",
         "build:dev": "tsc && webpack --mode=development",
         "format": "prettier --write ."
@@ -20,6 +21,7 @@
         "@types/react-dom": "^17.0.14",
         "copy-webpack-plugin": "^11.0.0",
         "html-webpack-plugin": "^5.5.0",
+        "http-server": "^14.1.1",
         "prettier": "^2.8.4",
         "ts-loader": "^9.4.2",
         "typescript": "^4.9.5",

@@ -7,7 +7,7 @@ import { Sprite } from './src/sprites/sprite';
 
 document.addEventListener(
     'DOMContentLoaded',
-    () => {
+    async () => {
         const actionCoordinator = new ActionCoordinator(UIImpl);
         const players = [new Hider()];
         const enemies = new HiderAI();
@@ -65,22 +65,14 @@ document.addEventListener(
             return win || lose;
         };
 
-        Promise.all([...allSprites.map((sprite) => sprite.doneDrawing)]).then(
-            async () => {
-                while (!gameEnd()) {
-                    const actions = await UIImpl.listenForUserInput(
-                        players,
-                        enemies.characters
-                    );
+        while (!gameEnd()) {
+            const actions = await UIImpl.listenForUserInput(
+                players,
+                enemies.characters
+            );
 
-                    await actionCoordinator.iterateGame(
-                        puzzle,
-                        actions,
-                        enemies
-                    );
-                }
-            }
-        );
+            await actionCoordinator.iterateGame(puzzle, actions, enemies);
+        }
     },
     { once: true }
 );
