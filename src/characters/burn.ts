@@ -1,9 +1,8 @@
 import { Character, Command, Stats } from 'rpg-game-engine';
 
-import { Meditate } from '../commands';
-import { Hide } from '../skills';
+import { Attack } from '../skills';
 
-export class Hider implements Character {
+export class Burn implements Character {
     readonly initial: Readonly<Stats>;
     readonly commands: Array<Command>;
 
@@ -16,6 +15,6 @@ export class Hider implements Character {
             staminaRegen: 1,
         };
         this.current = { ...this.initial };
-        this.commands = [new Hide(), new Meditate()];
+        this.commands = [new Attack()];
     }
 }

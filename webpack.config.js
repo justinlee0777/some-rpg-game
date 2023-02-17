@@ -1,5 +1,6 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 
 const config = {
@@ -14,7 +15,7 @@ const config = {
     module: {
         rules: [
             {
-                test: /\.tsx?$/,
+                test: /\.ts$/,
                 use: [
                     {
                         loader: 'ts-loader',
@@ -24,6 +25,10 @@ const config = {
                     },
                 ],
             },
+            {
+                test: /\.(s(a|c)ss)$/,
+                use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+            },
         ],
     },
     plugins: [
@@ -32,11 +37,9 @@ const config = {
             title: 'Game',
         }),
         new CopyWebpackPlugin({
-            patterns: [
-                { from: './index.css' },
-                { from: './assets', to: 'assets' },
-            ],
+            patterns: [{ from: './assets', to: 'assets' }],
         }),
+        new MiniCssExtractPlugin(),
     ],
 };
 

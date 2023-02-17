@@ -1,13 +1,13 @@
 import {
-    CommandType,
+    Command,
     OngoingEffectTriggerType,
     OngoingEffectType,
     Priority,
-    Skill,
-    SkillType,
 } from 'rpg-game-engine';
 
-export class Hide implements Skill {
+import { SkillType } from './types';
+
+export class Hide implements Command {
     stamina = 5;
 
     /** TODO: for now IMMEDIATE for testing */
@@ -23,7 +23,5 @@ export class Hide implements Skill {
         },
     ];
 
-    skillType = SkillType.HIDE;
-
-    type = CommandType.SKILL;
+    type = SkillType.HIDE;
 }

@@ -1,12 +1,15 @@
 import { Character, SkillAnimation } from 'rpg-game-engine';
 
 import { CharacterType } from '../characters';
-import { CharacterSpriteMapInstance } from '../character-sprite-map-impl';
+import { CharacterSpriteMap } from '../character-sprite-map';
 
-export function attackAnimation(source: Character): SkillAnimation {
+export function attackAnimation(
+    source: Character,
+    characterSpriteMap: CharacterSpriteMap
+): SkillAnimation {
     return {
         beforeEffect: () => {
-            const sprite = CharacterSpriteMapInstance.get(
+            const sprite = characterSpriteMap.get(
                 source.constructor as CharacterType
             );
 
@@ -14,7 +17,7 @@ export function attackAnimation(source: Character): SkillAnimation {
             return Promise.resolve();
         },
         runEffect: () => {
-            const sprite = CharacterSpriteMapInstance.get(
+            const sprite = characterSpriteMap.get(
                 source.constructor as CharacterType
             );
             const animation = sprite.animateAvatar(

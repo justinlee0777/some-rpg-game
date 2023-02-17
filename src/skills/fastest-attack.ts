@@ -1,15 +1,16 @@
-import { CommandType, Priority, Skill, SkillType } from 'rpg-game-engine';
+import { Command, Priority } from 'rpg-game-engine';
+
+import { SkillType } from './types';
 
 /**
  * TODO
  */
-export class FastestAttack implements Skill {
+export class FastestAttack implements Command {
     damage = 5;
 
     stamina = 15;
 
     priority = Priority.IMMEDIATE;
 
-    type = CommandType.SKILL;
-    skillType = SkillType.FASTEST_ATTACK;
+    type = SkillType.FASTEST_ATTACK;
 }

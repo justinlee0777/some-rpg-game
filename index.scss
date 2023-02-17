@@ -1,0 +1,92 @@
+body {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    padding: 24px;
+}
+
+#players {
+    margin-top: auto;
+}
+
+#players,
+#enemies {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.commands {
+    display: inline-flex;
+    flex-direction: column;
+
+    & > button {
+        border: 1px solid black;
+        background: white;
+
+        &.selected {
+            opacity: 0.5;
+        }
+    }
+}
+
+.character {
+    position: relative;
+}
+
+.avatar {
+    height: 40px;
+    width: 40px;
+    transition: opacity 600ms;
+}
+
+.target {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid red;
+    border-radius: 50%;
+    height: 16px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 16px;
+
+    &:before,
+    &:after {
+        content: '';
+        display: block;
+        height: 100%;
+        position: absolute;
+        width: 100%;
+    }
+
+    &:before {
+        border-left: 1px solid red;
+        left: 8px;
+    }
+
+    &:after {
+        border-top: 1px solid red;
+        top: 8px;
+    }
+}
+
+.health,
+.stamina {
+    font-size: 12px;
+}
+
+.health {
+    color: red;
+    left: 0;
+}
+
+.stamina {
+    color: green;
+    right: 0;
+}
+
+.hidden {
+    opacity: 0.5;
+}

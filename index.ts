@@ -1,28 +1,32 @@
+import './index.scss';
+
 import { ActionCoordinator, Character, Puzzle } from 'rpg-game-engine';
 
-import { UIImpl } from './src';
+import { UIImpl } from './src/ui-impl';
 import { HiderAI } from './src/ai';
-import { CharacterType, Hider } from './src/characters';
+import { Burn, CharacterType, Hider } from './src/characters';
 
 document.addEventListener(
     'DOMContentLoaded',
     async () => {
-        const actionCoordinator = new ActionCoordinator(UIImpl);
-        const players = [new Hider()];
+        const uiImpl = new UIImpl();
+
+        const actionCoordinator = new ActionCoordinator(uiImpl);
+        const players = [new Hider(), new Burn()];
         const enemies = new HiderAI();
 
         const setMap = (character: Character) => {
             const constructorFn = character.constructor as CharacterType;
 
-            const element = UIImpl.SpriteHelper.get(character);
-            UIImpl.CharacterSpriteMap.set(constructorFn, element);
+            const element = uiImpl.SpriteHelper.get(character);
+            uiImpl.CharacterSpriteMap.set(constructorFn, element);
 
             return element;
         };
 
         players.forEach((player) => {
             const element = setMap(player);
-            UIImpl.SpriteDrawer.draw(element, {
+            uiImpl.SpriteDrawer.draw(element, {
                 character: player,
                 player: true,
             });
@@ -30,7 +34,7 @@ document.addEventListener(
 
         enemies.characters.forEach((enemy) => {
             const element = setMap(enemy);
-            UIImpl.SpriteDrawer.draw(element, {
+            uiImpl.SpriteDrawer.draw(element, {
                 character: enemy,
                 player: false,
             });
@@ -61,7 +65,7 @@ document.addEventListener(
         };
 
         while (!gameEnd()) {
-            const actions = await UIImpl.listenForUserInput(
+            const actions = await uiImpl.UIInputCoordinator.listenForUserInput(
                 players,
                 enemies.characters
             );

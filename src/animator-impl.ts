@@ -5,16 +5,16 @@ import {
     isHiding,
     OngoingEffect,
     OngoingEffectType,
-    SkillType,
 } from 'rpg-game-engine';
 import { Animation, Animator, SkillAnimation } from 'rpg-game-engine/ui';
 
-import { CharacterSpriteMapInstance } from './character-sprite-map-impl';
+import { CharacterSpriteMap } from './character-sprite-map';
 
 import { damageAnimation } from './reaction-animations/damage-animation';
 import { attackAnimation } from './skill-animations/attack-animation';
 import { hideAnimation } from './ongoing-effect-animations/hide-animation';
 import { CharacterType } from './characters';
+import { SkillType } from './skills/types';
 
 export class AnimatorImpl implements Animator {
     private readonly defaultAnimation: SkillAnimation = {
@@ -23,12 +23,14 @@ export class AnimatorImpl implements Animator {
         afterEffect: () => Promise.resolve(),
     };
 
-    animateSkill(type: SkillType, sources: Array<Character>): SkillAnimation {
+    constructor(private characterSpriteMap: CharacterSpriteMap) {}
+
+    animateCommand(type: string, sources: Array<Character>): SkillAnimation {
         switch (type) {
             case SkillType.ATTACK:
             case SkillType.FASTER_ATTACK:
             case SkillType.FASTEST_ATTACK:
-                return attackAnimation(sources[0]);
+                return attackAnimation(sources[0], this.characterSpriteMap);
             default:
                 return this.defaultAnimation;
         }
@@ -50,21 +52,26 @@ export class AnimatorImpl implements Animator {
                         if (isHiding(target)) {
                             return Promise.resolve();
                         } else {
-                            return damageAnimation(target)();
+                            return damageAnimation(
+                                target,
+                                this.characterSpriteMap
+                            )();
                         }
                     }),
                 ]).then();
         } else if (effect.hiding) {
             return () =>
                 Promise.all([
-                    ...targets.map((target) => hideAnimation.applied(target)()),
+                    ...targets.map((target) =>
+                        hideAnimation.applied(target, this.characterSpriteMap)()
+                    ),
                 ]).then();
         }
         return () => Promise.resolve();
     }
 
     animateStaminaRegen(character: Character, newStamina: number): Animation {
-        const sprite = CharacterSpriteMapInstance.get(
+        const sprite = this.characterSpriteMap.get(
             character.constructor as CharacterType
         );
         return () => {
@@ -81,7 +88,10 @@ export class AnimatorImpl implements Animator {
             (ongoingEffect) => {
                 switch (ongoingEffect.type) {
                     case OngoingEffectType.HIDE:
-                        return hideAnimation.removed(character);
+                        return hideAnimation.removed(
+                            character,
+                            this.characterSpriteMap
+                        );
                     default:
                         return () => Promise.resolve();
                 }

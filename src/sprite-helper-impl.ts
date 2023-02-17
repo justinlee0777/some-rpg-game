@@ -2,7 +2,7 @@ import { Character } from 'rpg-game-engine';
 
 import { createSprite, Sprite } from './sprites/sprite';
 import { SpriteHelper } from './sprites/sprite-helper.interface';
-import { Hider, Test } from './characters';
+import { Burn, Hider, Test } from './characters';
 
 export class SpriteHelperImpl implements SpriteHelper<Sprite> {
     get(character: Character): Sprite {
@@ -10,6 +10,8 @@ export class SpriteHelperImpl implements SpriteHelper<Sprite> {
             case Hider:
             case Test:
                 return createSprite(character, 'assets/garbage-can.png');
+            case Burn:
+                return createSprite(character, 'assets/matchbox.png');
         }
     }
 }

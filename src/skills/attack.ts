@@ -1,4 +1,6 @@
-import { CommandType, Priority, Skill, SkillType } from 'rpg-game-engine';
+import { Command, Priority } from 'rpg-game-engine';
+
+import { SkillType } from './types';
 
 /**
  * TODO
@@ -6,13 +8,12 @@ import { CommandType, Priority, Skill, SkillType } from 'rpg-game-engine';
  * This is for prototype purposes. The more I think about it, the more
  * it seems counter to the design of the game.
  */
-export class Attack implements Skill {
+export class Attack implements Command {
     damage = 5;
 
     stamina = 5;
 
     priority = Priority.EAGER;
 
-    type = CommandType.SKILL;
-    skillType = SkillType.ATTACK;
+    type = SkillType.ATTACK;
 }

@@ -1,3 +1,5 @@
+export * from './burn';
+
 export * from './hider';
 
 export * from './test';

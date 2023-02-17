@@ -1,12 +1,15 @@
 import { Character } from 'rpg-game-engine';
 import { ReactionAnimation } from 'rpg-game-engine/ui';
 
-import { CharacterSpriteMapInstance } from '../character-sprite-map-impl';
+import { CharacterSpriteMap } from '../character-sprite-map';
 import { CharacterType } from '../characters';
 
-export function damageAnimation(target: Character): ReactionAnimation {
+export function damageAnimation(
+    target: Character,
+    characterSpriteMap: CharacterSpriteMap
+): ReactionAnimation {
     return () => {
-        const element = CharacterSpriteMapInstance.get(
+        const element = characterSpriteMap.get(
             target.constructor as CharacterType
         );
 

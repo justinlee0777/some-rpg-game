@@ -1,12 +1,10 @@
-import { OngoingEffectAnimation } from 'rpg-game-engine/ui';
-
 import { CharacterType } from '../characters';
-import { CharacterSpriteMapInstance } from '../character-sprite-map-impl';
+import { OngoingEffectAnimation } from './ongoing-effect-animation.interface';
 
 export const hideAnimation: OngoingEffectAnimation = {
-    applied: (source) => {
+    applied: (source, characterSpriteMap) => {
         return () => {
-            const sprite = CharacterSpriteMapInstance.get(
+            const sprite = characterSpriteMap.get(
                 source.constructor as CharacterType
             );
 
@@ -24,9 +22,9 @@ export const hideAnimation: OngoingEffectAnimation = {
             });
         };
     },
-    removed: (source) => {
+    removed: (source, characterSpriteMap) => {
         return () => {
-            const sprite = CharacterSpriteMapInstance.get(
+            const sprite = characterSpriteMap.get(
                 source.constructor as CharacterType
             );
 
