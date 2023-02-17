@@ -1,4 +1,5 @@
-import { Character, SkillAnimation } from 'rpg-game-engine';
+import { Character } from 'rpg-game-engine';
+import { SkillAnimation } from 'rpg-game-engine/ui';
 
 import { CharacterType } from '../characters';
 import { CharacterSpriteMap } from '../character-sprite-map';
