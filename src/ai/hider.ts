@@ -1,13 +1,13 @@
 import { AI, Action, Puzzle } from 'rpg-game-engine';
 
 import { Attack } from '../skills';
-import { Test } from '../characters/test';
+import { Charge, Guard } from '../characters';
 
 /**
  * Test AI.
  */
 export class HiderAI implements AI {
-    characters = [new Test()];
+    characters = [new Charge(), new Guard()];
 
     getActions(puzzle: Puzzle): Array<Action> {
         return [

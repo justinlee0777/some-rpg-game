@@ -10,7 +10,7 @@ import { createCommandMenu } from './command-menu';
 type ChosenAction = Omit<Action, 'targets'>;
 
 interface InputContext {
-    player: Character | null;
+    players: Array<Character> | null;
     chosenAction: ChosenAction | null;
 }
 
@@ -18,7 +18,7 @@ export class UIInputCoordinator {
     private userInterfaceElement: HTMLElement;
 
     private context: InputContext = {
-        player: null,
+        players: null,
         chosenAction: null,
     };
 
@@ -36,7 +36,7 @@ export class UIInputCoordinator {
         const actions = [];
 
         while (!this.endUserInputPhase(players, actions)) {
-            await this.getInput(players, enemies);
+            await this.getInput(players, enemies, actions);
         }
 
         return Promise.resolve(actions);
@@ -56,11 +56,12 @@ export class UIInputCoordinator {
 
     private getInput(
         players: Array<Character>,
-        enemies: Array<Character>
+        enemies: Array<Character>,
+        actions: Array<Action>
     ): Promise<void> {
-        if (!this.context.player) {
-            return this.pickPlayer(players).then((player) => {
-                this.context.player = player;
+        if (!this.context.players) {
+            return this.pickTarget(players).then((players) => {
+                this.context.players = players;
                 return undefined;
             });
         } else if (!this.context.chosenAction) {
@@ -68,26 +69,34 @@ export class UIInputCoordinator {
                 this.context.chosenAction = chosenAction;
                 return undefined;
             });
+        } else {
+            return this.pickTarget(enemies).then((targets) => {
+                actions.push({
+                    ...this.context.chosenAction,
+                    targets,
+                });
+                return undefined;
+            });
         }
     }
 
-    private pickPlayer(players: Array<Character>): Promise<Character> {
+    private pickTarget(players: Array<Character>): Promise<Array<Character>> {
         return new Promise((resolve) => {
             let index = 0;
-            let currentPlayer: Sprite, currentTarget: HTMLElement;
+            let currentCharacter: Sprite, currentTarget: HTMLElement;
 
             const updateTarget = () => {
                 if (currentTarget) {
-                    currentPlayer.htmlElement.removeChild(currentTarget);
+                    currentCharacter.htmlElement.removeChild(currentTarget);
                 }
 
                 const player = this.characterSpriteMap.get(
                     players[index].constructor as CharacterType
                 );
 
-                currentPlayer = player;
+                currentCharacter = player;
                 currentTarget = createTarget();
-                currentPlayer.htmlElement.appendChild(currentTarget);
+                currentCharacter.htmlElement.appendChild(currentTarget);
             };
 
             const endIndex = players.length - 1;
@@ -107,7 +116,8 @@ export class UIInputCoordinator {
                             'keydown',
                             listenToKeyboardEvents
                         );
-                        resolve(currentPlayer.character);
+                        currentTarget.classList.add('locked');
+                        resolve([currentCharacter.character]);
                         break;
                 }
             };
@@ -119,7 +129,8 @@ export class UIInputCoordinator {
 
     private pickAction(): Promise<ChosenAction> {
         return new Promise((resolve) => {
-            const commands = this.context.player.commands.map((command) =>
+            const [player] = this.context.players;
+            const commands = player.commands.map((command) =>
                 this.commandDescriptionFactory.get(command)
             );
             const commandMenu = createCommandMenu(commands);
@@ -159,8 +170,8 @@ export class UIInputCoordinator {
                             listenToKeyboardEvents
                         );
                         resolve({
-                            command: this.context.player.commands[index],
-                            source: [this.context.player],
+                            command: player.commands[index],
+                            source: [player],
                         });
                         break;
                 }

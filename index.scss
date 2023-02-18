@@ -70,6 +70,10 @@ body {
         border-top: 1px solid red;
         top: 8px;
     }
+
+    &.locked {
+        opacity: 0.3;
+    }
 }
 
 .health,
