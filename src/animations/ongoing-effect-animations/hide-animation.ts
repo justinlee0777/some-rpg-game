@@ -1,14 +1,10 @@
-import { CharacterType } from '../characters';
+import { getCharacterSpriteAvatar } from '../../sprites/character-sprite';
 import { OngoingEffectAnimation } from './ongoing-effect-animation.interface';
 
 export const hideAnimation: OngoingEffectAnimation = {
-    applied: (source, characterSpriteMap) => {
+    applied: (source) => {
         return () => {
-            const sprite = characterSpriteMap.get(
-                source.constructor as CharacterType
-            );
-
-            const element = sprite.avatar;
+            const element = getCharacterSpriteAvatar(source);
             element.classList.add('hidden');
 
             return new Promise((resolve) => {
@@ -22,13 +18,9 @@ export const hideAnimation: OngoingEffectAnimation = {
             });
         };
     },
-    removed: (source, characterSpriteMap) => {
+    removed: (source) => {
         return () => {
-            const sprite = characterSpriteMap.get(
-                source.constructor as CharacterType
-            );
-
-            const element = sprite.avatar;
+            const element = getCharacterSpriteAvatar(source);
             element.classList.remove('hidden');
 
             return new Promise((resolve) => {

@@ -3,7 +3,7 @@ import { CommandDescription } from 'commands/command-description-factory';
 import { htmlStringToElement } from '../sprites/html-string-to-element';
 
 const commandMenuTemplate = `
-<div class="commands"></div>
+<div id="commands"></div>
 `;
 
 const commandMenuButtonTemplate = `
@@ -33,7 +33,7 @@ export function createCommandMenuButton(
 
     commandMenuButtonElement.textContent = command.displayName;
 
-    commandMenuButtonElement.className = command.htmlId;
+    commandMenuButtonElement.id = command.htmlId;
 
     return commandMenuButtonElement;
 }

@@ -1,11 +1,9 @@
-import { Action, Character } from 'rpg-game-engine';
+import { Action, Character, Puzzle } from 'rpg-game-engine';
 
-import { CharacterType } from '../characters';
-import { CharacterSpriteMap } from '../character-sprite-map';
 import { createTarget } from './target';
-import { Sprite } from '../sprites/sprite';
-import { CommandDescriptionFactory } from 'commands/command-description-factory';
+import { CommandDescriptionFactory } from '../commands/command-description-factory';
 import { createCommandMenu } from './command-menu';
+import { getCharacterSprite } from '../sprites/character-sprite';
 
 type ChosenAction = Omit<Action, 'targets'>;
 
@@ -15,6 +13,8 @@ interface InputContext {
 }
 
 export class UIInputCoordinator {
+    private commandDescriptionFactory: CommandDescriptionFactory;
+
     private userInterfaceElement: HTMLElement;
 
     private context: InputContext = {
@@ -22,45 +22,36 @@ export class UIInputCoordinator {
         chosenAction: null,
     };
 
-    constructor(
-        private characterSpriteMap: CharacterSpriteMap,
-        private commandDescriptionFactory: CommandDescriptionFactory
-    ) {
+    private actions: Array<Action> = [];
+
+    constructor(private puzzle: Puzzle) {
+        this.commandDescriptionFactory = new CommandDescriptionFactory();
+
         this.userInterfaceElement = document.getElementById('user-interface');
     }
 
-    async listenForUserInput(
-        players: Array<Character>,
-        enemies: Array<Character>
-    ): Promise<Array<Action>> {
-        const actions = [];
-
-        while (!this.endUserInputPhase(players, actions)) {
-            await this.getInput(players, enemies, actions);
+    async listenForUserInput(): Promise<Array<Action>> {
+        while (!this.endUserInputPhase()) {
+            await this.getInput();
         }
 
-        return Promise.resolve(actions);
+        return Promise.resolve(this.actions);
     }
 
     /**
      * @returns true if every player is mapped to an action.
      */
-    private endUserInputPhase(
-        players: Array<Character>,
-        actions: Array<Action>
-    ): boolean {
-        return players.every((player) => {
-            return actions.some((action) => action.source.includes(player));
+    private endUserInputPhase(): boolean {
+        return this.puzzle.players.every((player) => {
+            return this.actions.some((action) =>
+                action.source.includes(player)
+            );
         });
     }
 
-    private getInput(
-        players: Array<Character>,
-        enemies: Array<Character>,
-        actions: Array<Action>
-    ): Promise<void> {
+    private getInput(): Promise<void> {
         if (!this.context.players) {
-            return this.pickTarget(players).then((players) => {
+            return this.pickTarget(this.puzzle.players).then((players) => {
                 this.context.players = players;
                 return undefined;
             });
@@ -70,33 +61,31 @@ export class UIInputCoordinator {
                 return undefined;
             });
         } else {
-            return this.pickTarget(enemies).then((targets) => {
-                actions.push({
-                    ...this.context.chosenAction,
-                    targets,
-                });
-                return undefined;
-            });
+            return this.pickTarget(this.puzzle.enemies.characters).then(
+                (targets) => {
+                    this.actions.push({
+                        ...this.context.chosenAction,
+                        targets,
+                    });
+                    return undefined;
+                }
+            );
         }
     }
 
     private pickTarget(players: Array<Character>): Promise<Array<Character>> {
         return new Promise((resolve) => {
             let index = 0;
-            let currentCharacter: Sprite, currentTarget: HTMLElement;
+            let currentCharacter: HTMLElement, currentTarget: HTMLElement;
 
             const updateTarget = () => {
                 if (currentTarget) {
-                    currentCharacter.htmlElement.removeChild(currentTarget);
+                    currentCharacter.removeChild(currentTarget);
                 }
 
-                const player = this.characterSpriteMap.get(
-                    players[index].constructor as CharacterType
-                );
-
-                currentCharacter = player;
+                currentCharacter = getCharacterSprite(players[index]);
                 currentTarget = createTarget();
-                currentCharacter.htmlElement.appendChild(currentTarget);
+                currentCharacter.appendChild(currentTarget);
             };
 
             const endIndex = players.length - 1;
@@ -117,7 +106,7 @@ export class UIInputCoordinator {
                             listenToKeyboardEvents
                         );
                         currentTarget.classList.add('locked');
-                        resolve([currentCharacter.character]);
+                        resolve([players[index]]);
                         break;
                 }
             };
@@ -144,9 +133,7 @@ export class UIInputCoordinator {
                     currentAction.classList.remove(selectedButtonClass);
                 }
 
-                currentAction = commandMenu.querySelector(
-                    `.${commands[index].htmlId}`
-                );
+                currentAction = document.getElementById(commands[index].htmlId);
                 currentAction.classList.add(selectedButtonClass);
             };
 
