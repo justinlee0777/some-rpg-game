@@ -1,0 +1,57 @@
+import { Action, Character, Puzzle } from 'rpg-game-engine';
+import * as React from 'react';
+import { createRoot, Root } from 'react-dom/client';
+
+import {
+    CommandDescription,
+    CommandDescriptionFactory,
+} from '../commands/command-description-factory';
+import { CommandMenu } from './command-menu';
+import { KeydownInterceptor } from './keydown-interceptor';
+
+export class UIInputCoordinator {
+    private commandDescriptionFactory: CommandDescriptionFactory;
+
+    private keydownInterceptor: KeydownInterceptor;
+
+    private userInterfaceElement: Root;
+
+    private loop = 0;
+
+    constructor(private puzzle: Puzzle) {
+        this.commandDescriptionFactory = new CommandDescriptionFactory();
+        this.keydownInterceptor = new KeydownInterceptor();
+
+        this.userInterfaceElement = createRoot(
+            document.getElementById('user-interface')
+        );
+    }
+
+    async listenForUserInput(): Promise<Array<Action>> {
+        return new Promise((resolve) => {
+            function onActionsDetermined(actions: Array<Action>): void {
+                resolve(actions);
+            }
+
+            this.userInterfaceElement.render(
+                <CommandMenu
+                    key={++this.loop}
+                    commandDescriptionFactory={this.commandDescriptionFactory}
+                    keydownInterceptor={this.keydownInterceptor}
+                    puzzle={this.puzzle}
+                    endUserInputPhase={this.endUserInputPhase}
+                    onActionsDetermined={onActionsDetermined}
+                />
+            );
+        });
+    }
+
+    /**
+     * @returns true if every player is mapped to an action.
+     */
+    private endUserInputPhase(puzzle: Puzzle, actions: Array<Action>): boolean {
+        return puzzle.players.every((player) => {
+            return actions.some((action) => action.source.includes(player));
+        });
+    }
+}

@@ -1,13 +1,7 @@
-import { Character } from 'rpg-game-engine';
-import { htmlStringToElement } from './html-string-to-element';
+import * as React from 'react';
 
-const spriteTemplate = `
-<div class="character">
-    <img class="avatar" />
-    <span class="health"></span>
-    <span class="stamina"></span>
-</div>
-`;
+import { GameCharacter } from '../characters/game-character';
+import { Character } from 'rpg-game-engine';
 
 function getCharacterSpriteId(character: Character): string {
     return `character-${character.constructor}`;
@@ -57,19 +51,16 @@ export function setCharacterSpriteStamina(
     stamina.textContent = character.current.stamina.toString();
 }
 
-export function createCharacterSprite(
-    character: Character,
-    imgSrc: string
-): HTMLElement {
-    const html = htmlStringToElement(spriteTemplate);
-    html.id = getCharacterSpriteId(character);
-
-    const avatar = html.querySelector('.avatar') as HTMLImageElement;
-    avatar.src = imgSrc;
-
-    setCharacterSpriteHitpoints(character, html);
-
-    setCharacterSpriteStamina(character, html);
-
-    return html;
+export function CharacterSprite({
+    character,
+}: {
+    character: GameCharacter;
+}): JSX.Element {
+    return (
+        <div className="character" id={getCharacterSpriteId(character)}>
+            <img className="avatar" src={character.ui.avatar} />
+            <span className="health">{character.current.health}</span>
+            <span className="stamina">{character.current.stamina}</span>
+        </div>
+    );
 }

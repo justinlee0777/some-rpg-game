@@ -1,10 +1,12 @@
-import { Character, Command, Stats } from 'rpg-game-engine';
+import { Command, Stats } from 'rpg-game-engine';
 
 import { Attack } from '../skills';
+import { GameCharacter, GameCharacterUI } from './game-character';
 
-export class Guard implements Character {
+export class Guard implements GameCharacter {
     readonly initial: Readonly<Stats>;
     readonly commands: Array<Command>;
+    readonly ui: GameCharacterUI;
 
     current: Stats;
 
@@ -16,5 +18,9 @@ export class Guard implements Character {
         };
         this.current = { ...this.initial };
         this.commands = [new Attack()];
+
+        this.ui = {
+            avatar: 'assets/helmet.png',
+        };
     }
 }

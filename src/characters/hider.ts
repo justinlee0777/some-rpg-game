@@ -1,11 +1,13 @@
-import { Character, Command, Stats } from 'rpg-game-engine';
+import { Command, Stats } from 'rpg-game-engine';
 
 import { Meditate } from '../commands';
 import { Hide } from '../skills';
+import { GameCharacter, GameCharacterUI } from './game-character';
 
-export class Hider implements Character {
+export class Hider implements GameCharacter {
     readonly initial: Readonly<Stats>;
     readonly commands: Array<Command>;
+    readonly ui: GameCharacterUI;
 
     current: Stats;
 
@@ -17,5 +19,9 @@ export class Hider implements Character {
         };
         this.current = { ...this.initial };
         this.commands = [new Hide(), new Meditate()];
+
+        this.ui = {
+            avatar: 'assets/garbage-can.png',
+        };
     }
 }

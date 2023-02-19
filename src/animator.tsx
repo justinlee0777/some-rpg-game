@@ -1,5 +1,4 @@
 import {
-    Character,
     Effect,
     EffectReaction,
     GameEvent,
@@ -9,6 +8,8 @@ import {
     OngoingEffectType,
     Puzzle,
 } from 'rpg-game-engine';
+import * as React from 'react';
+import { createRoot } from 'react-dom/client';
 
 import { SkillType } from './skills/types';
 import {
@@ -18,38 +19,46 @@ import {
     hideAnimation,
     SkillAnimation,
 } from './animations';
-import { SpriteHelper } from './sprites/sprite-helper';
-import { setCharacterSpriteStamina } from './sprites/character-sprite';
+import {
+    CharacterSprite,
+    setCharacterSpriteStamina,
+} from './sprites/character-sprite';
+import { GameCharacter } from './characters/game-character';
 
 export class Animator {
-    private spriteHelper: SpriteHelper;
-
-    private playerContainer: HTMLElement;
-    private enemyContainer: HTMLElement;
-
     private readonly defaultAnimation: SkillAnimation = {
         beforeEffect: () => Promise.resolve(),
         runEffect: () => Promise.resolve(),
         afterEffect: () => Promise.resolve(),
     };
 
-    constructor(private puzzle: Puzzle) {
-        this.spriteHelper = new SpriteHelper();
-
-        this.playerContainer = document.getElementById('players');
-        this.enemyContainer = document.getElementById('enemies');
-    }
+    constructor(private puzzle: Puzzle) {}
 
     draw(): void {
-        this.puzzle.players.forEach((player) => {
-            const sprite = this.spriteHelper.get(player);
-            this.playerContainer.appendChild(sprite);
-        });
+        const playerContainer = createRoot(document.getElementById('players'));
+        const enemyContainer = createRoot(document.getElementById('enemies'));
 
-        this.puzzle.enemies.characters.forEach((enemy) => {
-            const sprite = this.spriteHelper.get(enemy);
-            this.enemyContainer.appendChild(sprite);
-        });
+        const playerSprites = this.puzzle.players.map(
+            (player: GameCharacter) => (
+                <CharacterSprite
+                    character={player}
+                    key={player.constructor.toString()}
+                />
+            )
+        );
+
+        const enemySprites = this.puzzle.enemies.characters.map(
+            (enemy: GameCharacter) => (
+                <CharacterSprite
+                    character={enemy}
+                    key={enemy.constructor.toString()}
+                />
+            )
+        );
+
+        playerContainer.render(<>{playerSprites}</>);
+
+        enemyContainer.render(<>{enemySprites}</>);
     }
 
     animateEvents(events: Array<GameEvent>): Array<Animation> {
@@ -60,7 +69,10 @@ export class Animator {
                 case GameEventType.ACTION:
                     const { execute, action, effect, reaction } = event.event;
                     const { beforeEffect, runEffect, afterEffect } =
-                        this.animateCommand(action.command.type, action.source);
+                        this.animateCommand(
+                            action.command.type,
+                            action.source as Array<GameCharacter>
+                        );
 
                     queue.push(
                         () => new Promise((resolve) => resolve(execute())),
@@ -72,7 +84,11 @@ export class Animator {
                                 ),
                                 runEffect(),
                             ]).then(),
-                        this.animateReaction(effect, reaction, action.targets),
+                        this.animateReaction(
+                            effect,
+                            reaction,
+                            action.targets as Array<GameCharacter>
+                        ),
                         afterEffect
                     );
                     break;
@@ -87,7 +103,7 @@ export class Animator {
                                 [
                                     ...this.puzzle.players,
                                     ...this.puzzle.enemies.characters,
-                                ].map((character) =>
+                                ].map((character: GameCharacter) =>
                                     this.animateStaminaRegen(
                                         character,
                                         character.current.stamina
@@ -104,7 +120,7 @@ export class Animator {
                             [
                                 ...this.puzzle.players,
                                 ...this.puzzle.enemies.characters,
-                            ].map((character) =>
+                            ].map((character: GameCharacter) =>
                                 this.animateStatusEffectRemoval(
                                     character,
                                     map.get(character)
@@ -121,7 +137,7 @@ export class Animator {
 
     private animateCommand(
         type: string,
-        sources: Array<Character>
+        sources: Array<GameCharacter>
     ): SkillAnimation {
         switch (type) {
             case SkillType.ATTACK:
@@ -136,7 +152,7 @@ export class Animator {
     private animateReaction(
         effect: Effect,
         reaction: EffectReaction,
-        targets: Array<Character>
+        targets: Array<GameCharacter>
     ): Animation {
         if (reaction.foiled) {
             // TODO implement when implementing a foiling skill.
@@ -163,7 +179,7 @@ export class Animator {
     }
 
     private animateStaminaRegen(
-        character: Character,
+        character: GameCharacter,
         newStamina: number
     ): Animation {
         return () => {
@@ -173,7 +189,7 @@ export class Animator {
     }
 
     private animateStatusEffectRemoval(
-        character: Character,
+        character: GameCharacter,
         removedEffects: Array<OngoingEffect>
     ): Animation {
         const animations: Array<Animation> = removedEffects.map(

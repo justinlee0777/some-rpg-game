@@ -18,23 +18,33 @@ body {
     justify-content: space-evenly;
 }
 
-#commands {
-    display: flex;
-    flex-direction: row;
+.commands {
+    display: inline-flex;
+    flex-direction: column;
 }
 
-#commands-player-roulette,
-#commands-target-roulette,
-#commands-roulette {
+.command-menu-action {
+    display: flex;
+    flex-direction: row;
+
+    &.disabled {
+        opacity: 0.5;
+    }
+}
+
+.commands-player-roulette,
+.commands-target-roulette,
+.commands-roulette {
     border: 1px solid black;
     display: inline-flex;
     flex-direction: column;
     height: 60px;
     overflow-y: hidden;
+    scroll-behavior: smooth;
 }
 
 .player-roulette-slot,
-.player-target-slot {
+.target-roulette-slot {
     box-sizing: content-box;
     height: 40px;
     padding: 4px;
