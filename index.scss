@@ -18,17 +18,48 @@ body {
     justify-content: space-evenly;
 }
 
-.commands {
+#commands {
+    display: flex;
+    flex-direction: row;
+}
+
+#commands-player-roulette,
+#commands-target-roulette,
+#commands-roulette {
+    border: 1px solid black;
     display: inline-flex;
     flex-direction: column;
+    height: 60px;
+    overflow-y: hidden;
+}
 
-    & > button {
+.player-roulette-slot,
+.player-target-slot {
+    box-sizing: content-box;
+    height: 40px;
+    padding: 4px;
+    width: 40px;
+
+    &:nth-of-type(n + 2) {
+        padding-top: 8px;
+    }
+
+    &.selected {
         border: 1px solid black;
-        background: white;
+    }
 
-        &.selected {
-            opacity: 0.5;
-        }
+    & > img {
+        height: 100%;
+        width: 100%;
+    }
+}
+
+.command-roulette-slot {
+    border: 1px solid black;
+    background: white;
+
+    &.selected {
+        opacity: 0.5;
     }
 }
 
@@ -40,40 +71,6 @@ body {
     height: 40px;
     width: 40px;
     transition: opacity 600ms;
-}
-
-.target {
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid red;
-    border-radius: 50%;
-    height: 16px;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 16px;
-
-    &:before,
-    &:after {
-        content: '';
-        display: block;
-        height: 100%;
-        position: absolute;
-        width: 100%;
-    }
-
-    &:before {
-        border-left: 1px solid red;
-        left: 8px;
-    }
-
-    &:after {
-        border-top: 1px solid red;
-        top: 8px;
-    }
-
-    &.locked {
-        opacity: 0.3;
-    }
 }
 
 .health,

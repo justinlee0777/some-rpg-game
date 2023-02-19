@@ -21,7 +21,7 @@ export function getCharacterSprite(character: Character): HTMLElement {
 export function getCharacterSpriteAvatar(
     character: Character,
     sprite?: HTMLElement
-): HTMLElement {
+): HTMLImageElement {
     !sprite && (sprite = getCharacterSprite(character));
     return sprite.querySelector('.avatar') as HTMLImageElement;
 }

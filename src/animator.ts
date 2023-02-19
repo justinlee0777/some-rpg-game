@@ -52,8 +52,8 @@ export class Animator {
         });
     }
 
-    animateEvents(events: Array<GameEvent>): Array<Promise<void>> {
-        const queue: Array<Promise<void>> = [];
+    animateEvents(events: Array<GameEvent>): Array<Animation> {
+        const queue: Array<Animation> = [];
 
         for (const event of events) {
             switch (event.type) {
@@ -63,29 +63,55 @@ export class Animator {
                         this.animateCommand(action.command.type, action.source);
 
                     queue.push(
-                        new Promise((resolve) => resolve(execute())),
-                        beforeEffect(),
-                        Promise.all([
-                            new Promise((resolve) => resolve(effect.execute())),
-                            runEffect(),
-                        ]).then(),
-                        this.animateReaction(
-                            effect,
-                            reaction,
-                            action.targets
-                        )(),
-                        afterEffect()
+                        () => new Promise((resolve) => resolve(execute())),
+                        beforeEffect,
+                        () =>
+                            Promise.all([
+                                new Promise((resolve) =>
+                                    resolve(effect.execute())
+                                ),
+                                runEffect(),
+                            ]).then(),
+                        this.animateReaction(effect, reaction, action.targets),
+                        afterEffect
                     );
                     break;
                 case GameEventType.STAMINA_REGEN:
                     queue.push(
-                        new Promise((resolve) => resolve(event.event.execute()))
+                        () =>
+                            new Promise((resolve) =>
+                                resolve(event.event.execute())
+                            ),
+                        () =>
+                            Promise.all(
+                                [
+                                    ...this.puzzle.players,
+                                    ...this.puzzle.enemies.characters,
+                                ].map((character) =>
+                                    this.animateStaminaRegen(
+                                        character,
+                                        character.current.stamina
+                                    )
+                                )
+                            ).then()
                     );
                     break;
                 case GameEventType.ONGOING_EFFECT:
-                    queue.push(
-                        new Promise((resolve) => resolve(event.event.execute()))
-                    );
+                    queue.push(() => {
+                        const map = event.event.execute();
+
+                        return Promise.all(
+                            [
+                                ...this.puzzle.players,
+                                ...this.puzzle.enemies.characters,
+                            ].map((character) =>
+                                this.animateStatusEffectRemoval(
+                                    character,
+                                    map.get(character)
+                                )()
+                            )
+                        ).then();
+                    });
                     break;
             }
         }
