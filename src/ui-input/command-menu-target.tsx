@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Action } from 'rpg-game-engine';
 
-import { Animation, Animations } from '../animations';
+import { GameOngoingEffect } from '../ongoing-effects';
+import { Animation } from '../animations';
 import { GameCharacter } from '../characters/game-character';
 import { CommandDescription } from '../commands/command-description-factory';
 
@@ -30,7 +30,10 @@ export function CommandMenuTarget({
         let index = 0;
         const animations: Array<Animation> =
             command.ongoingEffects
-                .map((ongoingEffect) => Animations.get(ongoingEffect.type))
+                .map(
+                    (ongoingEffect: GameOngoingEffect) =>
+                        ongoingEffect.ui.animation
+                )
                 .reduce((allAnimations, animation) => {
                     return allAnimations.concat(
                         animation.applied(element),

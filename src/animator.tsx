@@ -3,9 +3,7 @@ import {
     EffectReaction,
     GameEvent,
     GameEventType,
-    isHiding,
     OngoingEffect,
-    OngoingEffectType,
     Puzzle,
 } from 'rpg-game-engine';
 import * as React from 'react';
@@ -16,7 +14,6 @@ import {
     Animation,
     attackAnimation,
     damageAnimation,
-    hideAnimation,
     SkillAnimation,
 } from './animations';
 import {
@@ -26,6 +23,7 @@ import {
 } from './sprites/character-sprite';
 import { GameCharacter } from './characters/game-character';
 import { HelpMenu } from './ui-input/help-menu';
+import { GameOngoingEffect } from './ongoing-effects';
 
 export class Animator {
     private readonly defaultAnimation: SkillAnimation = {
@@ -89,11 +87,7 @@ export class Animator {
                                 ),
                                 runEffect(),
                             ]).then(),
-                        this.animateReaction(
-                            effect,
-                            reaction,
-                            action.targets as Array<GameCharacter>
-                        ),
+                        this.animateReaction(effect, reaction),
                         afterEffect
                     );
                     break;
@@ -156,35 +150,40 @@ export class Animator {
 
     private animateReaction(
         effect: Effect,
-        reaction: EffectReaction,
-        targets: Array<GameCharacter>
+        reaction: EffectReaction
     ): Animation {
         if (reaction.foiled) {
             // TODO implement when implementing a foiling skill.
         }
 
-        if (effect.damaging) {
-            return () =>
-                Promise.all([
-                    ...targets.map((target) => {
-                        if (isHiding(target)) {
-                            return Promise.resolve();
+        return () =>
+            Promise.all([
+                ...effect.targets.map((targetEffect) => {
+                    return new Promise((resolve) => {
+                        if (targetEffect.damage) {
+                            return resolve(
+                                damageAnimation(targetEffect.target)()
+                            );
                         } else {
-                            return damageAnimation(target)();
+                            return resolve(undefined);
                         }
-                    }),
-                ]).then();
-        } else if (effect.hiding) {
-            return () =>
-                Promise.all([
-                    ...targets.map((target) => {
-                        const characterSprite =
-                            getCharacterSpriteAvatar(target);
-                        return hideAnimation.applied(characterSprite)();
-                    }),
-                ]).then();
-        }
-        return () => Promise.resolve();
+                    }).then(async () => {
+                        const appliedEffects =
+                            targetEffect.appliedEffects as Array<GameOngoingEffect>;
+                        if (appliedEffects) {
+                            for (const appliedEffect of appliedEffects) {
+                                const characterSprite =
+                                    getCharacterSpriteAvatar(
+                                        targetEffect.target
+                                    );
+                                await appliedEffect.ui.animation.applied(
+                                    characterSprite
+                                )();
+                            }
+                        }
+                    });
+                }),
+            ]).then();
     }
 
     private animateStaminaRegen(
@@ -202,15 +201,9 @@ export class Animator {
         removedEffects: Array<OngoingEffect>
     ): Animation {
         const animations: Array<Animation> = removedEffects.map(
-            (ongoingEffect) => {
-                switch (ongoingEffect.type) {
-                    case OngoingEffectType.HIDE:
-                        const characterSprite =
-                            getCharacterSpriteAvatar(character);
-                        return hideAnimation.removed(characterSprite);
-                    default:
-                        return () => Promise.resolve();
-                }
+            (ongoingEffect: GameOngoingEffect) => {
+                const characterSprite = getCharacterSpriteAvatar(character);
+                return ongoingEffect.ui.animation.removed(characterSprite);
             }
         );
 

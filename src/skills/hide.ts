@@ -1,27 +1,14 @@
-import {
-    Command,
-    OngoingEffectTriggerType,
-    OngoingEffectType,
-    Priority,
-} from 'rpg-game-engine';
+import { Command, Priority } from 'rpg-game-engine';
 
+import { HidingEffect } from '../ongoing-effects/hiding-effect';
 import { SkillType } from './types';
 
 export class Hide implements Command {
     stamina = 5;
 
-    /** TODO: for now IMMEDIATE for testing */
-    priority = Priority.IMMEDIATE;
+    priority = Priority.EAGER;
 
-    ongoingEffects = [
-        {
-            type: OngoingEffectType.HIDE,
-            turnDuration: 1,
-            trigger: {
-                type: OngoingEffectTriggerType.IMMEDIATE,
-            },
-        },
-    ];
+    ongoingEffects = [new HidingEffect()];
 
     type = SkillType.HIDE;
 }
