@@ -25,6 +25,7 @@ import {
     setCharacterSpriteStamina,
 } from './sprites/character-sprite';
 import { GameCharacter } from './characters/game-character';
+import { HelpMenu } from './ui-input/help-menu';
 
 export class Animator {
     private readonly defaultAnimation: SkillAnimation = {
@@ -60,6 +61,9 @@ export class Animator {
         playerContainer.render(<>{playerSprites}</>);
 
         enemyContainer.render(<>{enemySprites}</>);
+
+        const helpElement = createRoot(document.getElementById('help'));
+        helpElement.render(<HelpMenu />);
     }
 
     animateEvents(events: Array<GameEvent>): Array<Animation> {

@@ -81,6 +81,29 @@ body {
     }
 }
 
+#help {
+    bottom: 40px;
+    position: fixed;
+    right: 40px;
+}
+
+.help-menu {
+    border: 1px solid black;
+    font-size: 12px;
+    max-width: 100px;
+    padding: 4px;
+
+    &-trigger {
+        background-color: white;
+        border: 1px solid black;
+        border-radius: 50%;
+        cursor: pointer;
+        height: 40px;
+        text-align: center;
+        width: 40px;
+    }
+}
+
 .character {
     position: relative;
 }
