@@ -38,6 +38,9 @@ export function CommandMenu(props: CommandMenuProps): JSX.Element {
                 onActionDetermined={(action) =>
                     setActions(actions.concat(action))
                 }
+                onUndoLastAction={() =>
+                    setActions(actions.slice(0, actions.length - 1))
+                }
                 {...props}
                 key={actions.length}
             />
@@ -49,6 +52,7 @@ interface CommandMenuActionProps extends BaseCommandMenuProps {
     savedAction?: Action;
 
     onActionDetermined?: (action: Action) => void;
+    onUndoLastAction?: () => void;
 }
 
 export function CommandMenuAction({
@@ -58,11 +62,8 @@ export function CommandMenuAction({
 
     savedAction,
     onActionDetermined,
+    onUndoLastAction,
 }: CommandMenuActionProps): JSX.Element {
-    // const playerRouletteRef = React.useRef<HTMLDivElement>(null);
-    // const commandRouletteRef = React.useRef<HTMLDivElement>(null);
-    // const targetRouletteRef = React.useRef<HTMLDivElement>(null);
-
     const [selectedPlayer, setSelectedPlayer] = React.useState<GameCharacter>(
         (savedAction?.source[0] || puzzle.players[0]) as GameCharacter
     );
@@ -177,7 +178,8 @@ export function CommandMenuAction({
     let options: Array<unknown>,
         selectedOption: unknown,
         select: (option: unknown) => void,
-        choose: () => void;
+        choose: () => void,
+        undo: () => void;
 
     if (commandChosen) {
         options = [...puzzle.players, ...puzzle.enemies.characters];
@@ -192,6 +194,10 @@ export function CommandMenuAction({
                 targets: [selectedTarget],
             });
         };
+        undo = () => {
+            setCommandChosen(false);
+            setSelectedTarget(null);
+        };
     } else if (playerChosen) {
         options = selectedPlayer.commands;
         selectedOption = selectedCommand;
@@ -199,6 +205,10 @@ export function CommandMenuAction({
         choose = () => {
             setCommandChosen(true);
             setSelectedTarget(puzzle.players[0] as GameCharacter);
+        };
+        undo = () => {
+            setPlayerChosen(false);
+            setSelectedCommand(null);
         };
     } else {
         options = puzzle.players;
@@ -208,6 +218,7 @@ export function CommandMenuAction({
             setPlayerChosen(true);
             setSelectedCommand(selectedPlayer.commands[0]);
         };
+        undo = () => onUndoLastAction?.();
     }
 
     keydownInterceptor.arrowUp = () => {
@@ -223,6 +234,8 @@ export function CommandMenuAction({
     };
 
     keydownInterceptor.enter = keydownInterceptor.space = choose;
+
+    keydownInterceptor.escape = undo;
 
     return (
         <div

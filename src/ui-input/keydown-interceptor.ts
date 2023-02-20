@@ -3,6 +3,7 @@ export class KeydownInterceptor {
     arrowDown: Function;
     enter: Function;
     space: Function;
+    escape: Function;
 
     constructor() {
         // TODO: remember to destroy (though would we ever need to?)
@@ -19,6 +20,9 @@ export class KeydownInterceptor {
                     break;
                 case 'Space':
                     this.space?.();
+                    break;
+                case 'Escape':
+                    this.escape?.();
                     break;
             }
         });
