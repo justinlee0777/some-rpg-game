@@ -1,39 +1,50 @@
 import * as React from 'react';
-import { Action, Command, Puzzle } from 'rpg-game-engine';
+import { Action, Engine, Puzzle } from 'rpg-game-engine';
 
-import { CommandDescriptionFactory } from '../commands/command-description-factory';
-import { GameCharacter } from '../characters/game-character';
-import { KeydownInterceptor } from './keydown-interceptor';
-
-interface BaseCommandMenuProps {
-    keydownInterceptor: KeydownInterceptor;
-    commandDescriptionFactory: CommandDescriptionFactory;
-
-    puzzle?: Puzzle;
-}
+import { BaseCommandMenuProps } from './base-command-menu-props';
+import { CommandMenuAction } from './command-menu-action';
 
 export interface CommandMenuProps extends BaseCommandMenuProps {
+    engine: Engine;
+
     endUserInputPhase?: (puzzle: Puzzle, actions: Array<Action>) => boolean;
     onActionsDetermined?: (actions: Array<Action>) => void;
 }
 
 export function CommandMenu(props: CommandMenuProps): JSX.Element {
     const [actions, setActions] = React.useState<Array<Action>>([]);
+    const [submitted, setSubmitted] = React.useState<boolean>(false);
 
     const { endUserInputPhase, onActionsDetermined } = props;
 
-    if (endUserInputPhase?.(props.puzzle, actions)) {
-        onActionsDetermined?.(actions);
+    let submitButton: JSX.Element;
+
+    if (submitted) {
         return <></>;
     }
 
-    const previousMenus = actions.map((action, index) => (
-        <CommandMenuAction {...props} savedAction={action} key={index} />
-    ));
+    let currentActions = [...actions];
+    let incompleteMenu: JSX.Element;
 
-    return (
-        <div className="commands">
-            {previousMenus}
+    if (endUserInputPhase?.(props.puzzle, actions)) {
+        const { keydownInterceptor, engine } = props;
+
+        currentActions = engine.orderActions(currentActions);
+
+        keydownInterceptor.enter = keydownInterceptor.space = () => {
+            keydownInterceptor.clear();
+            setSubmitted(true);
+            onActionsDetermined?.(actions);
+        };
+
+        keydownInterceptor.escape = () => {
+            keydownInterceptor.clear();
+            setActions([]);
+        };
+
+        submitButton = <button>Confirm</button>;
+    } else {
+        incompleteMenu = (
             <CommandMenuAction
                 onActionDetermined={(action) =>
                     setActions(actions.concat(action))
@@ -44,206 +55,28 @@ export function CommandMenu(props: CommandMenuProps): JSX.Element {
                 {...props}
                 key={actions.length}
             />
-        </div>
-    );
-}
+        );
+    }
 
-interface CommandMenuActionProps extends BaseCommandMenuProps {
-    savedAction?: Action;
-
-    onActionDetermined?: (action: Action) => void;
-    onUndoLastAction?: () => void;
-}
-
-export function CommandMenuAction({
-    keydownInterceptor,
-    commandDescriptionFactory,
-    puzzle,
-
-    savedAction,
-    onActionDetermined,
-    onUndoLastAction,
-}: CommandMenuActionProps): JSX.Element {
-    const [selectedPlayer, setSelectedPlayer] = React.useState<GameCharacter>(
-        (savedAction?.source[0] || puzzle.players[0]) as GameCharacter
-    );
-    const [selectedCommand, setSelectedCommand] = React.useState<Command>(
-        savedAction?.command
-    );
-    const [selectedTarget, setSelectedTarget] = React.useState<GameCharacter>(
-        savedAction?.targets[0] as GameCharacter
-    );
-
-    const [playerChosen, setPlayerChosen] = React.useState<boolean>(
-        Boolean(savedAction)
-    );
-    const [commandChosen, setCommandChosen] = React.useState<boolean>(
-        Boolean(savedAction)
-    );
-
-    let playerRoulette: JSX.Element,
-        commandRoulette: JSX.Element,
-        targetRoulette: JSX.Element;
-
-    const slots = puzzle.players.map((player: GameCharacter) => (
-        <div
-            className={
-                'player-roulette-slot' +
-                (player === selectedPlayer ? ' selected' : '')
-            }
-            key={player.constructor.toString()}
-        >
-            <img src={player.ui.avatar} />
-        </div>
+    const menus = currentActions.map((action) => (
+        <CommandMenuAction
+            {...props}
+            savedAction={action}
+            key={createKey(action)}
+        />
     ));
 
-    const scrollPlayerIntoView = (element: HTMLElement) => {
-        const playerIndex = puzzle.players.findIndex(
-            (player) => player === selectedPlayer
-        );
-        element && (element.scrollTop = playerIndex * 50);
-    };
-
-    playerRoulette = (
-        <div className="commands-player-roulette" ref={scrollPlayerIntoView}>
-            {slots}
-        </div>
-    );
-
-    if (playerChosen) {
-        const commandButtons = selectedPlayer.commands.map((command) => {
-            const commandDescription = commandDescriptionFactory.get(command);
-
-            return (
-                <button
-                    className={
-                        'command-roulette-slot' +
-                        (command.type === selectedCommand.type
-                            ? ' selected'
-                            : '')
-                    }
-                    key={commandDescription.displayName}
-                >
-                    {commandDescription.displayName}
-                </button>
-            );
-        });
-
-        const scrollCommandIntoView = (element: HTMLElement) => {
-            const commandIndex = selectedPlayer.commands.findIndex(
-                (command) => command.type === selectedCommand.type
-            );
-            element && (element.scrollTop = commandIndex * 50);
-        };
-
-        commandRoulette = (
-            <div className="commands-roulette" ref={scrollCommandIntoView}>
-                {commandButtons}
-            </div>
-        );
-    }
-
-    if (commandChosen) {
-        const targets = [...puzzle.players, ...puzzle.enemies.characters];
-
-        const slots = targets.map((target: GameCharacter) => (
-            <div
-                className={
-                    'target-roulette-slot' +
-                    (target === selectedTarget ? ' selected' : '')
-                }
-                key={target.constructor.toString()}
-            >
-                <img src={target.ui.avatar} />
-            </div>
-        ));
-
-        const scrollTargetIntoView = (element: HTMLElement) => {
-            const targetIndex = targets.findIndex(
-                (target) => target === selectedTarget
-            );
-            element && (element.scrollTop = targetIndex * 50);
-        };
-
-        targetRoulette = (
-            <div
-                className="commands-target-roulette"
-                ref={scrollTargetIntoView}
-            >
-                {slots}
-            </div>
-        );
-    }
-
-    let options: Array<unknown>,
-        selectedOption: unknown,
-        select: (option: unknown) => void,
-        choose: () => void,
-        undo: () => void;
-
-    if (commandChosen) {
-        options = [...puzzle.players, ...puzzle.enemies.characters];
-        selectedOption = selectedTarget;
-        select = setSelectedTarget;
-        choose = () => {
-            keydownInterceptor.clear();
-
-            onActionDetermined({
-                source: [selectedPlayer],
-                command: selectedCommand,
-                targets: [selectedTarget],
-            });
-        };
-        undo = () => {
-            setCommandChosen(false);
-            setSelectedTarget(null);
-        };
-    } else if (playerChosen) {
-        options = selectedPlayer.commands;
-        selectedOption = selectedCommand;
-        select = setSelectedCommand;
-        choose = () => {
-            setCommandChosen(true);
-            setSelectedTarget(puzzle.players[0] as GameCharacter);
-        };
-        undo = () => {
-            setPlayerChosen(false);
-            setSelectedCommand(null);
-        };
-    } else {
-        options = puzzle.players;
-        selectedOption = selectedPlayer;
-        select = setSelectedPlayer;
-        choose = () => {
-            setPlayerChosen(true);
-            setSelectedCommand(selectedPlayer.commands[0]);
-        };
-        undo = () => onUndoLastAction?.();
-    }
-
-    keydownInterceptor.arrowUp = () => {
-        const index = options.findIndex((option) => option === selectedOption);
-        const newIndex = index === 0 ? options.length - 1 : index - 1;
-        select(options[newIndex]);
-    };
-
-    keydownInterceptor.arrowDown = () => {
-        const index = options.findIndex((option) => option === selectedOption);
-        const newIndex = index === options.length - 1 ? 0 : index + 1;
-        select(options[newIndex]);
-    };
-
-    keydownInterceptor.enter = keydownInterceptor.space = choose;
-
-    keydownInterceptor.escape = undo;
-
     return (
-        <div
-            className={'command-menu-action' + (savedAction ? ' disabled' : '')}
-        >
-            {playerRoulette}
-            {commandRoulette}
-            {targetRoulette}
+        <div className="commands">
+            {menus}
+            {incompleteMenu}
+            {submitButton}
         </div>
     );
+}
+
+function createKey(action: Action): string {
+    return `${action.source[0].constructor.toString()}-${
+        action.command.type
+    }-${action.targets[0].constructor.toString()}`;
 }

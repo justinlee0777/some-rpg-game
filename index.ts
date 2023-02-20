@@ -21,8 +21,8 @@ document.addEventListener(
             ],
         };
 
-        const uiInputCoordinator = new UIInputCoordinator(puzzle);
         const engine = new Engine(puzzle);
+        const uiInputCoordinator = new UIInputCoordinator(puzzle, engine);
         const animator = new Animator(puzzle);
 
         animator.draw();

@@ -21,6 +21,7 @@ import {
 } from './animations';
 import {
     CharacterSprite,
+    getCharacterSpriteAvatar,
     setCharacterSpriteStamina,
 } from './sprites/character-sprite';
 import { GameCharacter } from './characters/game-character';
@@ -172,7 +173,11 @@ export class Animator {
         } else if (effect.hiding) {
             return () =>
                 Promise.all([
-                    ...targets.map((target) => hideAnimation.applied(target)()),
+                    ...targets.map((target) => {
+                        const characterSprite =
+                            getCharacterSpriteAvatar(target);
+                        return hideAnimation.applied(characterSprite)();
+                    }),
                 ]).then();
         }
         return () => Promise.resolve();
@@ -196,7 +201,9 @@ export class Animator {
             (ongoingEffect) => {
                 switch (ongoingEffect.type) {
                     case OngoingEffectType.HIDE:
-                        return hideAnimation.removed(character);
+                        const characterSprite =
+                            getCharacterSpriteAvatar(character);
+                        return hideAnimation.removed(characterSprite);
                     default:
                         return () => Promise.resolve();
                 }

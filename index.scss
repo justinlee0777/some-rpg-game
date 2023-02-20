@@ -48,11 +48,8 @@ body {
     box-sizing: content-box;
     height: 40px;
     padding: 4px;
+    position: relative;
     width: 40px;
-
-    &:nth-of-type(n + 2) {
-        padding-top: 8px;
-    }
 
     &.selected {
         border: 1px solid black;
@@ -61,6 +58,17 @@ body {
     & > img {
         height: 100%;
         width: 100%;
+    }
+
+    &-icon {
+        border: 1px solid black;
+        color: red;
+        height: 20px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        text-align: center;
+        width: 20px;
     }
 }
 
