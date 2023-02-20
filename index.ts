@@ -1,6 +1,6 @@
 import './index.scss';
 
-import { Engine, Puzzle } from 'rpg-game-engine';
+import { Engine, GameEventType, Puzzle } from 'rpg-game-engine';
 
 import { HiderAI } from './src/ai';
 import { Burn, Hider } from './src/characters';
@@ -27,7 +27,8 @@ document.addEventListener(
 
         animator.draw();
 
-        while (true) {
+        let gameEnd = false;
+        while (!gameEnd) {
             const inputs = await uiInputCoordinator.listenForUserInput();
             const events = await engine.getResults(inputs);
             const animations = await animator.animateEvents(events);
@@ -35,6 +36,10 @@ document.addEventListener(
             for (const animation of animations) {
                 await animation();
             }
+
+            gameEnd = events.some(
+                (event) => event.type === GameEventType.END_GAME
+            );
         }
     },
     { once: true }
