@@ -7,7 +7,7 @@
     "license": "ISC",
     "scripts": {
         "start": "npm run build:dev && http-server -c-1 ./dist",
-        "build": "tsc && webpack --mode=production",
+        "build": "rm -rf dist && webpack --mode=production",
         "build:dev": "tsc && webpack --mode=development",
         "format": "prettier --write ."
     },

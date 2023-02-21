@@ -1,6 +1,7 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const path = require('path');
 
 const config = {
@@ -30,6 +31,10 @@ const config = {
                 use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
             },
         ],
+    },
+    optimization: {
+        minimize: true,
+        minimizer: [new TerserPlugin()],
     },
     plugins: [
         new HtmlWebpackPlugin({
