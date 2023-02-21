@@ -1,6 +1,6 @@
 import { Command } from 'rpg-game-engine';
 
-import { SkillType } from '../skills/types';
+import { SkillType } from './skills/types';
 import { ActType } from './types';
 
 export interface CommandDescription extends Command {

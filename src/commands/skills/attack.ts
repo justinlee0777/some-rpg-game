@@ -1,5 +1,7 @@
-import { Command, Priority } from 'rpg-game-engine';
+import { Priority } from 'rpg-game-engine';
 
+import { attackAnimation } from '../../animations';
+import { GameCommand } from '../game-command';
 import { SkillType } from './types';
 
 /**
@@ -8,7 +10,7 @@ import { SkillType } from './types';
  * This is for prototype purposes. The more I think about it, the more
  * it seems counter to the design of the game.
  */
-export class Attack implements Command {
+export class Attack implements GameCommand {
     damage = 5;
 
     stamina = 5;
@@ -16,4 +18,8 @@ export class Attack implements Command {
     priority = Priority.EAGER;
 
     type = SkillType.ATTACK;
+
+    ui = {
+        animation: attackAnimation,
+    };
 }

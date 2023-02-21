@@ -1,6 +1,6 @@
 import { Command, Stats } from 'rpg-game-engine';
 
-import { Attack } from '../skills';
+import { Attack } from '../commands/skills';
 import { CharacterType } from './character-type';
 import { GameCharacter, GameCharacterUI } from './game-character';
 

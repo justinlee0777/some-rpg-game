@@ -8,7 +8,7 @@ import {
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { SkillType } from './skills/types';
+import { SkillType } from './commands/skills/types';
 import {
     Animation,
     attackAnimation,
@@ -23,14 +23,9 @@ import {
 import { GameCharacter } from './characters/game-character';
 import { HelpMenu } from './ui-input/help-menu';
 import { GameOngoingEffect } from './ongoing-effects';
+import { GameCommand } from 'commands/game-command';
 
 export class Animator {
-    private readonly defaultAnimation: SkillAnimation = {
-        beforeEffect: () => Promise.resolve(),
-        runEffect: () => Promise.resolve(),
-        afterEffect: () => Promise.resolve(),
-    };
-
     constructor(private puzzle: Puzzle) {}
 
     draw(): void {
@@ -64,13 +59,9 @@ export class Animator {
             switch (event.type) {
                 case GameEventType.ACTION:
                     const { execute, source, command } = event.event;
-                    const { beforeEffect, runEffect, afterEffect } =
-                        this.animateCommand(
-                            command.type,
-                            source.map(
-                                ({ character }) => character
-                            ) as Array<GameCharacter>
-                        );
+                    const { beforeEffect, runEffect, afterEffect } = (
+                        command as GameCommand
+                    ).ui.animation(source[0].character);
 
                     queue.push(
                         beforeEffect,
@@ -124,18 +115,6 @@ export class Animator {
         }
 
         return queue;
-    }
-
-    private animateCommand(
-        type: string,
-        sources: Array<GameCharacter>
-    ): SkillAnimation {
-        switch (type) {
-            case SkillType.ATTACK:
-                return attackAnimation(sources[0]);
-            default:
-                return this.defaultAnimation;
-        }
     }
 
     private animateReaction(effect: Effect): Animation {

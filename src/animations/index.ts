@@ -9,3 +9,5 @@ export * from './ongoing-effect-animations/index';
 export * from './reaction-animations/index';
 
 export * from './skill-animations/index';
+
+export * from './default-animation';

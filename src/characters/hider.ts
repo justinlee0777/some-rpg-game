@@ -1,7 +1,7 @@
 import { Command, Stats } from 'rpg-game-engine';
 
 import { Meditate } from '../commands';
-import { Hide } from '../skills';
+import { Hide } from '../commands/skills';
 import { CharacterType } from './character-type';
 import { GameCharacter, GameCharacterUI } from './game-character';
 

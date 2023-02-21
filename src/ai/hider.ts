@@ -1,6 +1,6 @@
 import { AI, Action, Puzzle } from 'rpg-game-engine';
 
-import { Attack } from '../skills';
+import { Attack } from '../commands/skills';
 import { Charge, Guard } from '../characters';
 
 /**
