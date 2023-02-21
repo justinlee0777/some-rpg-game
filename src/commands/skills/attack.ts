@@ -11,7 +11,7 @@ import { SkillType } from './types';
  * it seems counter to the design of the game.
  */
 export class Attack implements GameCommand {
-    damage = 5;
+    damage = () => 5;
 
     stamina = 5;
 

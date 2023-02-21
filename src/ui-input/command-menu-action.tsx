@@ -108,6 +108,7 @@ export function CommandMenuAction({
                     <CommandMenuTarget
                         target={target}
                         command={savedAction.command}
+                        source={[selectedPlayer]}
                         key={target.constructor.toString()}
                     />
                 );

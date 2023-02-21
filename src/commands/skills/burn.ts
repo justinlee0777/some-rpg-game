@@ -6,7 +6,7 @@ import { GameCommand } from '../game-command';
 import { SkillType } from './types';
 
 export class Burn implements GameCommand {
-    damage = 1;
+    damage = () => 1;
 
     stamina = 5;
 

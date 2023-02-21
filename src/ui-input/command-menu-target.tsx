@@ -1,16 +1,18 @@
 import * as React from 'react';
+import { Character, Command } from 'rpg-game-engine';
 
 import { GameOngoingEffect } from '../ongoing-effects';
 import { Animation } from '../animations';
 import { GameCharacter } from '../characters/game-character';
-import { Command } from 'rpg-game-engine';
 
 export interface CommandMenuTargetProps {
+    source: Array<Character>;
     command: Command;
     target: GameCharacter;
 }
 
 export function CommandMenuTarget({
+    source,
     command,
     target,
 }: CommandMenuTargetProps): JSX.Element {
@@ -18,7 +20,9 @@ export function CommandMenuTarget({
 
     if (command.damage) {
         damageIcon = (
-            <div className="target-roulette-slot-icon">-{command.damage}</div>
+            <div className="target-roulette-slot-icon">
+                -{command.damage(source)}
+            </div>
         );
     }
     let endLoop = false;
