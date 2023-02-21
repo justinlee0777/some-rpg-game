@@ -1,6 +1,7 @@
 import { Command, Stats } from 'rpg-game-engine';
 
 import { Attack } from '../skills';
+import { CharacterType } from './character-type';
 import { GameCharacter, GameCharacterUI } from './game-character';
 
 export class Guard implements GameCharacter {
@@ -9,6 +10,8 @@ export class Guard implements GameCharacter {
     readonly ui: GameCharacterUI;
 
     current: Stats;
+
+    type = CharacterType.GUARD;
 
     constructor() {
         this.initial = {

@@ -2,6 +2,7 @@ import { Command, Stats } from 'rpg-game-engine';
 
 import { Meditate } from '../commands';
 import { Hide } from '../skills';
+import { CharacterType } from './character-type';
 import { GameCharacter, GameCharacterUI } from './game-character';
 
 export class Hider implements GameCharacter {
@@ -10,6 +11,8 @@ export class Hider implements GameCharacter {
     readonly ui: GameCharacterUI;
 
     current: Stats;
+
+    type = CharacterType.HIDER;
 
     constructor() {
         this.initial = {

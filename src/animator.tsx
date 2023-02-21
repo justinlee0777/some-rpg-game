@@ -1,6 +1,5 @@
 import {
     Effect,
-    EffectReaction,
     GameEvent,
     GameEventType,
     OngoingEffect,
@@ -70,24 +69,23 @@ export class Animator {
         for (const event of events) {
             switch (event.type) {
                 case GameEventType.ACTION:
-                    const { execute, action, effect, reaction } = event.event;
+                    const { execute, source, command } = event.event;
                     const { beforeEffect, runEffect, afterEffect } =
                         this.animateCommand(
-                            action.command.type,
-                            action.source as Array<GameCharacter>
+                            command.type,
+                            source.map(
+                                ({ character }) => character
+                            ) as Array<GameCharacter>
                         );
 
                     queue.push(
-                        () => new Promise((resolve) => resolve(execute())),
                         beforeEffect,
                         () =>
                             Promise.all([
-                                new Promise((resolve) =>
-                                    resolve(effect.execute())
-                                ),
+                                new Promise((resolve) => resolve(execute())),
                                 runEffect(),
                             ]).then(),
-                        this.animateReaction(effect, reaction),
+                        this.animateReaction(event.event),
                         afterEffect
                     );
                     break;
@@ -140,41 +138,32 @@ export class Animator {
     ): SkillAnimation {
         switch (type) {
             case SkillType.ATTACK:
-            case SkillType.FASTER_ATTACK:
-            case SkillType.FASTEST_ATTACK:
                 return attackAnimation(sources[0]);
             default:
                 return this.defaultAnimation;
         }
     }
 
-    private animateReaction(
-        effect: Effect,
-        reaction: EffectReaction
-    ): Animation {
-        if (reaction.foiled) {
-            // TODO implement when implementing a foiling skill.
-        }
-
+    private animateReaction(effect: Effect): Animation {
         return () =>
             Promise.all([
                 ...effect.targets.map((targetEffect) => {
                     return new Promise((resolve) => {
-                        if (targetEffect.damage) {
+                        if (targetEffect.delta.health < 0) {
                             return resolve(
-                                damageAnimation(targetEffect.target)()
+                                damageAnimation(targetEffect.character)()
                             );
                         } else {
                             return resolve(undefined);
                         }
                     }).then(async () => {
-                        const appliedEffects =
-                            targetEffect.appliedEffects as Array<GameOngoingEffect>;
+                        const appliedEffects = targetEffect.delta.ongoingEffects
+                            .added as Array<GameOngoingEffect>;
                         if (appliedEffects) {
                             for (const appliedEffect of appliedEffects) {
                                 const characterSprite =
                                     getCharacterSpriteAvatar(
-                                        targetEffect.target
+                                        targetEffect.character
                                     );
                                 await appliedEffect.ui.animation.applied(
                                     characterSprite

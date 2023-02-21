@@ -23,18 +23,6 @@ export class CommandDescriptionFactory {
                     htmlId: 'attack-skill',
                     displayName: 'Attack',
                 };
-            case SkillType.FASTER_ATTACK:
-                return {
-                    ...command,
-                    htmlId: 'faster-attack-skill',
-                    displayName: 'Faster Attack',
-                };
-            case SkillType.FASTEST_ATTACK:
-                return {
-                    ...command,
-                    htmlId: 'fastest-attack-skill',
-                    displayName: 'Fastest Attack',
-                };
             case SkillType.HIDE:
                 return {
                     ...command,
