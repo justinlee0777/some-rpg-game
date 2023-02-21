@@ -1,6 +1,6 @@
 import { Command, Stats } from 'rpg-game-engine';
 
-import { Attack } from '../commands/skills';
+import { Burn as BurnSkill } from '../commands/skills';
 import { CharacterType } from './character-type';
 import { GameCharacter, GameCharacterUI } from './game-character';
 
@@ -20,7 +20,7 @@ export class Burn implements GameCharacter {
             staminaRegen: 1,
         };
         this.current = { ...this.initial };
-        this.commands = [new Attack()];
+        this.commands = [new BurnSkill()];
 
         this.ui = {
             avatar: 'assets/matchbox.png',

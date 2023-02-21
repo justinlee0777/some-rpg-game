@@ -17,6 +17,7 @@ export class Burn implements GameCommand {
     type = SkillType.ATTACK;
 
     ui = {
+        displayName: 'Burn',
         animation: burnAnimation,
     };
 }

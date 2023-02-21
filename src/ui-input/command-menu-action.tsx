@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Action, Command } from 'rpg-game-engine';
 
-import { CommandDescription } from '../commands/command-description-factory';
+import { GameCommand } from '../commands/game-command';
 import { GameCharacter } from '../characters/game-character';
 import { BaseCommandMenuProps } from './base-command-menu-props';
 import { CommandMenuTarget } from './command-menu-target';
@@ -15,7 +15,6 @@ interface CommandMenuActionProps extends BaseCommandMenuProps {
 
 export function CommandMenuAction({
     keydownInterceptor,
-    commandDescriptionFactory,
     puzzle,
 
     savedAction,
@@ -68,23 +67,23 @@ export function CommandMenuAction({
     );
 
     if (playerChosen) {
-        const commandButtons = selectedPlayer.commands.map((command) => {
-            const commandDescription = commandDescriptionFactory.get(command);
-
-            return (
-                <button
-                    className={
-                        'command-roulette-slot' +
-                        (command.type === selectedCommand.type
-                            ? ' selected'
-                            : '')
-                    }
-                    key={commandDescription.displayName}
-                >
-                    {commandDescription.displayName}
-                </button>
-            );
-        });
+        const commandButtons = selectedPlayer.commands.map(
+            (command: GameCommand) => {
+                return (
+                    <button
+                        className={
+                            'command-roulette-slot' +
+                            (command.type === selectedCommand.type
+                                ? ' selected'
+                                : '')
+                        }
+                        key={command.ui.displayName}
+                    >
+                        {command.ui.displayName}
+                    </button>
+                );
+            }
+        );
 
         const scrollCommandIntoView = (element: HTMLElement) => {
             const commandIndex = selectedPlayer.commands.findIndex(
@@ -108,7 +107,7 @@ export function CommandMenuAction({
                 return (
                     <CommandMenuTarget
                         target={target}
-                        command={savedAction.command as CommandDescription}
+                        command={savedAction.command}
                         key={target.constructor.toString()}
                     />
                 );

@@ -4,6 +4,7 @@ import { SkillAnimation } from '../animations';
 
 export interface GameCommand extends Command {
     ui: {
+        displayName: string;
         animation: (character: Character) => SkillAnimation;
     };
 }

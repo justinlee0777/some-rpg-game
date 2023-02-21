@@ -2,13 +2,10 @@ import { Action, Engine, Puzzle } from 'rpg-game-engine';
 import * as React from 'react';
 import { createRoot, Root } from 'react-dom/client';
 
-import { CommandDescriptionFactory } from '../commands/command-description-factory';
 import { CommandMenu } from './command-menu';
 import { KeydownInterceptor } from './keydown-interceptor';
 
 export class UIInputCoordinator {
-    private commandDescriptionFactory: CommandDescriptionFactory;
-
     private keydownInterceptor: KeydownInterceptor;
 
     private userInterfaceElement: Root;
@@ -16,7 +13,6 @@ export class UIInputCoordinator {
     private loop = 0;
 
     constructor(private puzzle: Puzzle, private engine: Engine) {
-        this.commandDescriptionFactory = new CommandDescriptionFactory();
         this.keydownInterceptor = new KeydownInterceptor();
 
         this.userInterfaceElement = createRoot(
@@ -33,7 +29,6 @@ export class UIInputCoordinator {
             this.userInterfaceElement.render(
                 <CommandMenu
                     key={++this.loop}
-                    commandDescriptionFactory={this.commandDescriptionFactory}
                     keydownInterceptor={this.keydownInterceptor}
                     engine={this.engine}
                     puzzle={this.puzzle}

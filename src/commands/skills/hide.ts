@@ -15,6 +15,7 @@ export class Hide implements GameCommand {
     type = SkillType.HIDE;
 
     ui = {
+        displayName: 'Hide',
         animation: () => defaultAnimation,
     };
 }

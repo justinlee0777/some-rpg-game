@@ -20,6 +20,7 @@ export class Attack implements GameCommand {
     type = SkillType.ATTACK;
 
     ui = {
+        displayName: 'Attack',
         animation: attackAnimation,
     };
 }

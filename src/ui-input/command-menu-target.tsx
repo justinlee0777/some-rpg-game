@@ -3,17 +3,17 @@ import * as React from 'react';
 import { GameOngoingEffect } from '../ongoing-effects';
 import { Animation } from '../animations';
 import { GameCharacter } from '../characters/game-character';
-import { CommandDescription } from '../commands/command-description-factory';
+import { Command } from 'rpg-game-engine';
 
-export interface CommandMenuTargetInterface {
-    command: CommandDescription;
+export interface CommandMenuTargetProps {
+    command: Command;
     target: GameCharacter;
 }
 
 export function CommandMenuTarget({
     command,
     target,
-}: CommandMenuTargetInterface): JSX.Element {
+}: CommandMenuTargetProps): JSX.Element {
     let damageIcon: JSX.Element;
 
     if (command.damage) {

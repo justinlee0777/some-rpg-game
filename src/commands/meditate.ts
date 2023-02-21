@@ -12,6 +12,7 @@ export class Meditate implements GameCommand {
     type = ActType.MEDITATE;
 
     ui = {
+        displayName: 'Meditate',
         animation: () => defaultAnimation,
     };
 }
