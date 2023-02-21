@@ -1,6 +1,6 @@
 import { Command, Stats } from 'rpg-game-engine';
 
-import { Attack } from '../commands/skills';
+import { Charge as ChargeSkill, ChargeBurst } from '../commands/index';
 import { CharacterType } from './character-type';
 import { GameCharacter, GameCharacterUI } from './game-character';
 
@@ -20,7 +20,7 @@ export class Charge implements GameCharacter {
             staminaRegen: 1,
         };
         this.current = { ...this.initial };
-        this.commands = [new Attack()];
+        this.commands = [new ChargeSkill(), new ChargeBurst()];
 
         this.ui = {
             avatar: 'assets/battery.png',

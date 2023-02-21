@@ -2,7 +2,7 @@ import './index.scss';
 
 import { EffectType, Engine, Puzzle } from 'rpg-game-engine';
 
-import { HiderAI } from './src/ai';
+import { TestAI } from './src/ai';
 import { Burn, Hider } from './src/characters';
 import { UIInputCoordinator } from './src/ui-input/ui-input-coordinator';
 import { Animator } from './src/animator';
@@ -12,7 +12,7 @@ document.addEventListener(
     async () => {
         const puzzle: Puzzle = {
             players: [new Hider(), new Burn()],
-            enemies: new HiderAI(),
+            enemies: new TestAI(),
             victoryConditions: [
                 (enemies) => enemies.every((e) => e.current.health <= 0),
             ],

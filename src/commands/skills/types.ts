@@ -2,8 +2,8 @@
  * Unique identifier for skills.
  */
 export enum SkillType {
-    /** TODO Prototype */
-    ATTACK = 'Attack',
-
+    BURN = 'Burn',
+    CHARGE = 'Charge',
+    CHARGE_BURST = 'ChargeBurst',
     HIDE = 'Hide',
 }

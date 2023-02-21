@@ -25,6 +25,8 @@ export function CommandMenuTarget({
             </div>
         );
     }
+
+    /* Need to figure out a better way of doing this.
     let endLoop = false;
     const loop = async (element: HTMLElement) => {
         if (!element || !command.ongoingEffects?.length) {
@@ -58,10 +60,11 @@ export function CommandMenuTarget({
     React.useEffect(() => () => {
         endLoop = true;
     });
+    */
 
     return (
         <div className="target-roulette-slot selected" key={target.type}>
-            <img className="avatar" src={target.ui.avatar} ref={loop} />
+            <img className="avatar" src={target.ui.avatar} />
             {damageIcon}
         </div>
     );

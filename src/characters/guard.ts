@@ -1,6 +1,5 @@
 import { Command, Stats } from 'rpg-game-engine';
 
-import { Attack } from '../commands/skills';
 import { CharacterType } from './character-type';
 import { GameCharacter, GameCharacterUI } from './game-character';
 
@@ -20,7 +19,7 @@ export class Guard implements GameCharacter {
             staminaRegen: 1,
         };
         this.current = { ...this.initial };
-        this.commands = [new Attack()];
+        this.commands = [];
 
         this.ui = {
             avatar: 'assets/helmet.png',

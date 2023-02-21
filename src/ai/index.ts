@@ -1,1 +1,1 @@
-export * from './hider';
+export * from './test';

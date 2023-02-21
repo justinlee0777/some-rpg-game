@@ -14,7 +14,7 @@ export class Burn implements GameCommand {
 
     ongoingEffects = [new BurningEffect()];
 
-    type = SkillType.ATTACK;
+    type = SkillType.BURN;
 
     ui = {
         displayName: 'Burn',

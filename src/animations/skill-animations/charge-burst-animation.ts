@@ -4,7 +4,7 @@ import { setCharacterSpriteStamina } from '../../sprites/character-sprite';
 import { SkillAnimation } from '../skill-animation.interface';
 import { animateCharacterSprite } from '../../sprites/character-sprite';
 
-export function attackAnimation(source: Character): SkillAnimation {
+export function chargeBurstAnimation(source: Character): SkillAnimation {
     return {
         beforeEffect: () => {
             return Promise.resolve();
@@ -14,7 +14,10 @@ export function attackAnimation(source: Character): SkillAnimation {
 
             const animation = animateCharacterSprite(
                 source,
-                [{ transform: 'rotate(360deg)' }],
+                [
+                    { filter: 'blur(5px)' },
+                    { transform: 'rotate(360deg)', filter: 'blur(0)' },
+                ],
                 {
                     duration: 600,
                     iterations: 1,

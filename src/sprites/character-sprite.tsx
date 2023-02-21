@@ -31,6 +31,13 @@ export function animateCharacterSprite(
     return avatar.animate(keyframes, options);
 }
 
+export function getCharacterSpriteOngoingEffects(
+    character: Character
+): HTMLElement {
+    const sprite = getCharacterSprite(character);
+    return sprite.querySelector('.ongoing-effects');
+}
+
 export function setCharacterSpriteHitpoints(
     character: Character,
     sprite?: HTMLElement
@@ -59,6 +66,7 @@ export function CharacterSprite({
     return (
         <div className="character" id={getCharacterSpriteId(character)}>
             <img className="avatar" src={character.ui.avatar} />
+            <div className="ongoing-effects"></div>
             <span className="health">{character.current.health}</span>
             <span className="stamina">{character.current.stamina}</span>
         </div>

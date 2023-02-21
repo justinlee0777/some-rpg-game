@@ -125,12 +125,8 @@ export class Animator {
                             .added as Array<GameOngoingEffect>;
                         if (appliedEffects) {
                             for (const appliedEffect of appliedEffects) {
-                                const characterSprite =
-                                    getCharacterSpriteAvatar(
-                                        targetEffect.character
-                                    );
                                 await appliedEffect.ui.animation.applied(
-                                    characterSprite
+                                    targetEffect.character as GameCharacter
                                 )();
                             }
                         }
@@ -152,8 +148,7 @@ export class Animator {
     ): Animation {
         const animations: Array<Animation> = removedEffects.map(
             (ongoingEffect: GameOngoingEffect) => {
-                const characterSprite = getCharacterSpriteAvatar(character);
-                return ongoingEffect.ui.animation.removed(characterSprite);
+                return ongoingEffect.ui.animation.removed(character);
             }
         );
 
