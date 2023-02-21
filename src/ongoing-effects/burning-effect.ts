@@ -15,9 +15,8 @@ export class BurningEffect implements GameOngoingEffect {
         animation: burningAnimation,
     };
 
-    causeDamage: {
-        startOfTurn: () => 3;
-        endOfTurn: () => 3;
+    causeDamage = {
+        endOfTurn: () => 5,
     };
 
     apply(): BurningEffect {

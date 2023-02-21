@@ -134,4 +134,27 @@ body {
 }
 
 .burning {
+    animation: 1s linear burningEffect infinite;
+    background: red;
+    border: 5px solid yellow;
+    border-radius: 50%;
+    height: 15px;
+    left: -10px;
+    position: absolute;
+    top: -10px;
+    width: 10px;
+}
+
+@keyframes burningEffect {
+    0% {
+        transform: scale(0.1);
+    }
+
+    50% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(0.1);
+    }
 }
