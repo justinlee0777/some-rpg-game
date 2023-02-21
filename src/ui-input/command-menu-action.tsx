@@ -26,8 +26,8 @@ export function CommandMenuAction({
     const [selectedPlayer, setSelectedPlayer] = React.useState<GameCharacter>(
         (savedAction?.source[0] || puzzle.players[0]) as GameCharacter
     );
-    const [selectedCommand, setSelectedCommand] = React.useState<Command>(
-        savedAction?.command
+    const [selectedCommand, setSelectedCommand] = React.useState<GameCommand>(
+        savedAction?.command as GameCommand
     );
     const [selectedTarget, setSelectedTarget] = React.useState<GameCharacter>(
         savedAction?.targets[0] as GameCharacter
@@ -144,6 +144,16 @@ export function CommandMenuAction({
         );
     }
 
+    let commandDescription: JSX.Element;
+
+    if (!completed && selectedCommand) {
+        commandDescription = (
+            <p className="command-description">
+                {selectedCommand.ui.description}
+            </p>
+        );
+    }
+
     if (!completed) {
         let options: Array<unknown>,
             selectedOption: unknown,
@@ -190,7 +200,7 @@ export function CommandMenuAction({
             select = setSelectedPlayer;
             choose = () => {
                 setPlayerChosen(true);
-                setSelectedCommand(selectedPlayer.commands[0]);
+                setSelectedCommand(selectedPlayer.commands[0] as GameCommand);
             };
             undo = () => onUndoLastAction?.();
         }
@@ -217,12 +227,17 @@ export function CommandMenuAction({
     }
 
     return (
-        <div
-            className={'command-menu-action' + (savedAction ? ' disabled' : '')}
-        >
-            {playerRoulette}
-            {commandRoulette}
-            {targetRoulette}
-        </div>
+        <>
+            <div
+                className={
+                    'command-menu-action' + (savedAction ? ' disabled' : '')
+                }
+            >
+                {playerRoulette}
+                {commandRoulette}
+                {targetRoulette}
+            </div>
+            {commandDescription}
+        </>
     );
 }

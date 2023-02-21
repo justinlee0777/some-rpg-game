@@ -5,6 +5,7 @@ body {
     height: 100vh;
     margin: 0;
     padding: 24px;
+    position: relative;
 }
 
 #players {
@@ -41,6 +42,10 @@ body {
     height: 60px;
     overflow-y: hidden;
     scroll-behavior: smooth;
+}
+
+.commands-roulette {
+    flex: 1;
 }
 
 .player-roulette-slot,
@@ -81,9 +86,17 @@ body {
     }
 }
 
+.command-description {
+    border: 1px solid black;
+    font-size: 12px;
+    margin-top: 0;
+    padding: 8px;
+    width: 100px;
+}
+
 #help {
     bottom: 40px;
-    position: fixed;
+    position: absolute;
     right: 40px;
 }
 

@@ -16,6 +16,7 @@ export class Hide implements GameCommand {
 
     ui = {
         displayName: 'Hide',
+        description: 'For this turn only, a target will not take damage.',
         animation: () => defaultAnimation,
     };
 }

@@ -13,6 +13,7 @@ export class Meditate implements GameCommand {
 
     ui = {
         displayName: 'Meditate',
+        description: 'Do nothing.',
         animation: () => defaultAnimation,
     };
 }

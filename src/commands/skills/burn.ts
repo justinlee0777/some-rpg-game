@@ -18,6 +18,8 @@ export class Burn implements GameCommand {
 
     ui = {
         displayName: 'Burn',
+        description:
+            'Sets the target alight. Further stacks increase damage and refresh.',
         animation: burnAnimation,
     };
 }

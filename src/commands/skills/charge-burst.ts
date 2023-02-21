@@ -14,6 +14,8 @@ export class ChargeBurst implements GameCommand {
 
     ui = {
         displayName: 'Charge Burst',
+        description:
+            'A fairly weak attack that increases in damage dramatically with stacks of Charge.',
         animation: chargeBurstAnimation,
     };
 

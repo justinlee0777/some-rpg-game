@@ -16,6 +16,8 @@ export class Charge implements GameCommand {
 
     ui = {
         displayName: 'Charge',
+        description:
+            'Increases the damage of Charge Burst dramatically with more stacks.',
         animation: chargeAnimation,
     };
 }
