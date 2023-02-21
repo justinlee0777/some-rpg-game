@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Action, Engine, Puzzle } from 'rpg-game-engine';
+import { Action, Character, Engine, Puzzle } from 'rpg-game-engine';
 
 import { BaseCommandMenuProps } from './base-command-menu-props';
 import { CommandMenuAction } from './command-menu-action';
@@ -46,14 +46,24 @@ export function CommandMenu(props: CommandMenuProps): JSX.Element {
     } else {
         incompleteMenu = (
             <CommandMenuAction
-                onActionDetermined={(action) =>
-                    setActions(actions.concat(action))
+                onActionDetermined={(newAction) =>
+                    setActions(
+                        actions
+                            .filter(
+                                (action) =>
+                                    !areSourcesEqual(
+                                        action.source,
+                                        newAction.source
+                                    )
+                            )
+                            .concat(newAction)
+                    )
                 }
                 onUndoLastAction={() =>
                     setActions(actions.slice(0, actions.length - 1))
                 }
                 {...props}
-                key={actions.length}
+                key={generateUniqueKey()}
             />
         );
     }
@@ -75,8 +85,17 @@ export function CommandMenu(props: CommandMenuProps): JSX.Element {
     );
 }
 
+function generateUniqueKey(): string {
+    return Date.now().toString(36);
+}
+
+function areSourcesEqual(a: Array<Character>, b: Array<Character>): boolean {
+    return (
+        a.some((character) => b.includes(character)) &&
+        b.some((character) => a.includes(character))
+    );
+}
+
 function createKey(action: Action): string {
-    return `${action.source[0].constructor.toString()}-${
-        action.command.type
-    }-${action.targets[0].constructor.toString()}`;
+    return `${action.source[0].type}-${action.command.type}-${action.targets[0].type}`;
 }

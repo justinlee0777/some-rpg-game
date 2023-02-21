@@ -4,7 +4,7 @@ import { GameCharacter } from '../characters/game-character';
 import { Character } from 'rpg-game-engine';
 
 function getCharacterSpriteId(character: Character): string {
-    return `character-${character.constructor}`;
+    return `character-${character.type}`;
 }
 
 export function getCharacterSprite(character: Character): HTMLElement {

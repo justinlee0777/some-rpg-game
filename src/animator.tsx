@@ -39,19 +39,13 @@ export class Animator {
 
         const playerSprites = this.puzzle.players.map(
             (player: GameCharacter) => (
-                <CharacterSprite
-                    character={player}
-                    key={player.constructor.toString()}
-                />
+                <CharacterSprite character={player} key={player.type} />
             )
         );
 
         const enemySprites = this.puzzle.enemies.characters.map(
             (enemy: GameCharacter) => (
-                <CharacterSprite
-                    character={enemy}
-                    key={enemy.constructor.toString()}
-                />
+                <CharacterSprite character={enemy} key={enemy.type} />
             )
         );
 

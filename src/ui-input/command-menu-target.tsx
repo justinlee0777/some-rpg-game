@@ -56,10 +56,7 @@ export function CommandMenuTarget({
     });
 
     return (
-        <div
-            className="target-roulette-slot selected"
-            key={target.constructor.toString()}
-        >
+        <div className="target-roulette-slot selected" key={target.type}>
             <img className="avatar" src={target.ui.avatar} ref={loop} />
             {damageIcon}
         </div>
