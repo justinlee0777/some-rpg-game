@@ -1,20 +1,15 @@
 import {
+    ActionEffect,
     Effect,
+    EffectType,
     GameEvent,
-    GameEventType,
     OngoingEffect,
     Puzzle,
 } from 'rpg-game-engine';
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { SkillType } from './commands/skills/types';
-import {
-    Animation,
-    attackAnimation,
-    damageAnimation,
-    SkillAnimation,
-} from './animations';
+import { Animation, damageAnimation } from './animations';
 import {
     CharacterSprite,
     getCharacterSpriteAvatar,
@@ -23,7 +18,7 @@ import {
 import { GameCharacter } from './characters/game-character';
 import { HelpMenu } from './ui-input/help-menu';
 import { GameOngoingEffect } from './ongoing-effects';
-import { GameCommand } from 'commands/game-command';
+import { GameCommand } from './commands/game-command';
 
 export class Animator {
     constructor(private puzzle: Puzzle) {}
@@ -56,9 +51,11 @@ export class Animator {
         const queue: Array<Animation> = [];
 
         for (const event of events) {
-            switch (event.type) {
-                case GameEventType.ACTION:
-                    const { execute, source, command } = event.event;
+            const effect: Effect = event.event;
+
+            switch (effect.type) {
+                case EffectType.ACTION:
+                    const { execute, source, command } = effect;
                     const { beforeEffect, runEffect, afterEffect } = (
                         command as GameCommand
                     ).ui.animation(source[0].character);
@@ -70,46 +67,40 @@ export class Animator {
                                 new Promise((resolve) => resolve(execute())),
                                 runEffect(),
                             ]).then(),
-                        this.animateReaction(event.event),
+                        this.animateReaction(effect),
                         afterEffect
                     );
                     break;
-                case GameEventType.STAMINA_REGEN:
+                case EffectType.STAMINA_REGEN:
                     queue.push(
                         () =>
-                            new Promise((resolve) =>
-                                resolve(event.event.execute())
-                            ),
+                            new Promise((resolve) => resolve(effect.execute())),
                         () =>
                             Promise.all(
                                 [
                                     ...this.puzzle.players,
                                     ...this.puzzle.enemies.characters,
                                 ].map((character: GameCharacter) =>
-                                    this.animateStaminaRegen(
-                                        character,
-                                        character.current.stamina
-                                    )
+                                    this.animateStaminaRegen(character)
                                 )
                             ).then()
                     );
                     break;
-                case GameEventType.ONGOING_EFFECT:
-                    queue.push(() => {
-                        const map = event.event.execute();
-
-                        return Promise.all(
-                            [
-                                ...this.puzzle.players,
-                                ...this.puzzle.enemies.characters,
-                            ].map((character: GameCharacter) =>
-                                this.animateStatusEffectRemoval(
-                                    character,
-                                    map.get(character)
-                                )()
-                            )
-                        ).then();
-                    });
+                case EffectType.ONGOING_EFFECT:
+                    queue.push(
+                        () =>
+                            new Promise((resolve) => resolve(effect.execute())),
+                        () => {
+                            return Promise.all(
+                                [...effect.characters].map((character) =>
+                                    this.animateStatusEffectRemoval(
+                                        character.character as GameCharacter,
+                                        character.delta.ongoingEffects.removed
+                                    )()
+                                )
+                            ).then();
+                        }
+                    );
                     break;
             }
         }
@@ -117,7 +108,7 @@ export class Animator {
         return queue;
     }
 
-    private animateReaction(effect: Effect): Animation {
+    private animateReaction(effect: ActionEffect): Animation {
         return () =>
             Promise.all([
                 ...effect.targets.map((targetEffect) => {
@@ -148,10 +139,7 @@ export class Animator {
             ]).then();
     }
 
-    private animateStaminaRegen(
-        character: GameCharacter,
-        newStamina: number
-    ): Animation {
+    private animateStaminaRegen(character: GameCharacter): Animation {
         return () => {
             setCharacterSpriteStamina(character);
             return Promise.resolve();

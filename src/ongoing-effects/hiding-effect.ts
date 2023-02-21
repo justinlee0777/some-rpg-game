@@ -1,4 +1,4 @@
-import { OngoingEffectTriggerType } from 'rpg-game-engine';
+import { OngoingEffect, OngoingEffectTriggerType } from 'rpg-game-engine';
 
 import { hideAnimation } from '../animations';
 import { GameOngoingEffect } from './game-ongoing-effect';
@@ -17,5 +17,9 @@ export class HidingEffect implements GameOngoingEffect {
 
     changeDamage(): number {
         return 0;
+    }
+
+    apply(): OngoingEffect {
+        return new HidingEffect();
     }
 }

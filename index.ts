@@ -1,6 +1,6 @@
 import './index.scss';
 
-import { Engine, GameEventType, Puzzle } from 'rpg-game-engine';
+import { EffectType, Engine, Puzzle } from 'rpg-game-engine';
 
 import { HiderAI } from './src/ai';
 import { Burn, Hider } from './src/characters';
@@ -38,7 +38,7 @@ document.addEventListener(
             }
 
             gameEnd = events.some(
-                (event) => event.type === GameEventType.END_GAME
+                (event) => event.event.type === EffectType.END_GAME
             );
         }
     },
