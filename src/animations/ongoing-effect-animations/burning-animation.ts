@@ -14,6 +14,8 @@ export const burningAnimation: OngoingEffectAnimation = {
     },
     removed: (element) => {
         return () => {
+            const burningIcon = element.parentElement.querySelector('.burning');
+            element.parentElement.removeChild(burningIcon);
             return Promise.resolve();
         };
     },

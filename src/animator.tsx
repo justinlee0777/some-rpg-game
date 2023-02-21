@@ -1,6 +1,6 @@
 import {
-    ActionEffect,
     Effect,
+    EffectedCharacter,
     EffectType,
     GameEvent,
     OngoingEffect,
@@ -67,7 +67,7 @@ export class Animator {
                                 new Promise((resolve) => resolve(execute())),
                                 runEffect(),
                             ]).then(),
-                        this.animateReaction(effect),
+                        this.animateReaction(effect.targets),
                         afterEffect
                     );
                     break;
@@ -90,16 +90,16 @@ export class Animator {
                     queue.push(
                         () =>
                             new Promise((resolve) => resolve(effect.execute())),
-                        () => {
-                            return Promise.all(
+                        this.animateReaction(effect.characters),
+                        () =>
+                            Promise.all(
                                 [...effect.characters].map((character) =>
                                     this.animateStatusEffectRemoval(
                                         character.character as GameCharacter,
                                         character.delta.ongoingEffects.removed
                                     )()
                                 )
-                            ).then();
-                        }
+                            ).then()
                     );
                     break;
             }
@@ -108,10 +108,10 @@ export class Animator {
         return queue;
     }
 
-    private animateReaction(effect: ActionEffect): Animation {
+    private animateReaction(characters: Array<EffectedCharacter>): Animation {
         return () =>
             Promise.all([
-                ...effect.targets.map((targetEffect) => {
+                ...characters.map((targetEffect) => {
                     return new Promise((resolve) => {
                         if (targetEffect.delta.health < 0) {
                             return resolve(
