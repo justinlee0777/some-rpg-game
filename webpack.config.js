@@ -44,7 +44,21 @@ const config = {
         new CopyWebpackPlugin({
             patterns: [
                 { from: './assets', to: 'assets' },
-                { from: './package.json' },
+                {
+                    from: './package.json',
+                    transform: (content) => {
+                        const json = JSON.parse(content.toString());
+
+                        // The current distribution has no dependencies.
+                        delete json.dependencies;
+                        delete json.devDependencies;
+
+                        // Why not delete the scripts at this point.
+                        delete json.scripts;
+
+                        return JSON.stringify(json);
+                    },
+                },
             ],
         }),
         new MiniCssExtractPlugin(),
