@@ -42,7 +42,10 @@ const config = {
             title: 'Game',
         }),
         new CopyWebpackPlugin({
-            patterns: [{ from: './assets', to: 'assets' }],
+            patterns: [
+                { from: './assets', to: 'assets' },
+                { from: './package.json' },
+            ],
         }),
         new MiniCssExtractPlugin(),
     ],
