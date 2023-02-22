@@ -1,5 +1,5 @@
 {
-    "name": "rpg-game-engine-ui",
+    "name": "rpg-game-poc",
     "version": "0.0.1",
     "description": "",
     "main": "index.ts",
@@ -14,7 +14,7 @@
     "dependencies": {
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "rpg-game-engine": "file:../rpg-game-engine/dist"
+        "rpg-game-engine": "^1.0.3"
     },
     "devDependencies": {
         "@types/react": "^18.0.28",
